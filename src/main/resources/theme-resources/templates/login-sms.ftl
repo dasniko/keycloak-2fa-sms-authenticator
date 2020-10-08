@@ -1,9 +1,9 @@
 <#import "template.ftl" as layout>
 <@layout.registrationLayout displayInfo=true; section>
 	<#if section = "header">
-		${msg("smsAuthTitle")}
+		${msg("smsAuthTitle",realm.displayName)}
 	<#elseif section = "form">
-		<form id="kc-login-sms-code-form" class="${properties.kcFormClass!}" action="${url.loginAction}" method="post">
+		<form id="kc-sms-code-login-form" class="${properties.kcFormClass!}" action="${url.loginAction}" method="post">
 			<div class="${properties.kcFormGroupClass!}">
 				<div class="${properties.kcLabelWrapperClass!}">
 					<label for="code" class="${properties.kcLabelClass!}">${msg("smsAuthLabel")}</label>

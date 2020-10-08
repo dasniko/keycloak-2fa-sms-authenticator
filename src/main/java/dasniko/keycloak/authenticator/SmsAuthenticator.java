@@ -21,43 +21,38 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class SmsAuthenticator implements Authenticator {
 
-	private static final String TPL_CODE = "login-sms-code.ftl";
+	private static final String TPL_CODE = "login-sms.ftl";
 
 	@Override
 	public void authenticate(AuthenticationFlowContext context) {
 		AuthenticatorConfigModel config = context.getAuthenticatorConfig();
 		KeycloakSession session = context.getSession();
 		UserModel user = context.getUser();
+
 		String mobileNumber = user.getFirstAttribute("mobile_number");
+		// mobileNumber of course has to be further validated on proper format, country code, ...
 
-		if (mobileNumber != null) {
-			// the mobileNumber of course has to be further validated on proper format, country code, ...
+		int length = Integer.parseInt(config.getConfig().get("length"));
+		int ttl = Integer.parseInt(config.getConfig().get("ttl"));
 
-			int length = Integer.parseInt(config.getConfig().get("length"));
-			int ttl = Integer.parseInt(config.getConfig().get("ttl"));
+		String code = generateAuthCode(length);
+		AuthenticationSessionModel authSession = context.getAuthenticationSession();
+		authSession.setAuthNote("code", code);
+		authSession.setAuthNote("ttl", Long.toString(System.currentTimeMillis() + (ttl * 1000)));
 
-			String code = generateAuthCode(length);
-			AuthenticationSessionModel authSession = context.getAuthenticationSession();
-			authSession.setAuthNote("code", code);
-			authSession.setAuthNote("ttl", Long.toString(System.currentTimeMillis() + (ttl * 1000)));
+		try {
+			Theme theme = session.theme().getTheme(Theme.Type.LOGIN);
+			Locale locale = session.getContext().resolveLocale(user);
+			String smsAuthText = theme.getMessages(locale).getProperty("smsAuthText");
+			String smsText = String.format(smsAuthText, code, Math.floorDiv(ttl, 60));
 
-			try {
-				Theme theme = session.theme().getTheme(Theme.Type.LOGIN);
-				Locale locale = session.getContext().resolveLocale(user);
-				String smsAuthText = theme.getMessages(locale).getProperty("smsAuthText");
-				String smsText = String.format(smsAuthText, code, Math.floorDiv(ttl, 60));
+			SmsServiceFactory.get(config.getConfig()).send(mobileNumber, smsText);
 
-				SmsServiceFactory.get(config.getConfig()).send(mobileNumber, smsText);
-
-				context.challenge(context.form().setAttribute("realm", context.getRealm()).createForm(TPL_CODE));
-			} catch (Exception e) {
-				context.failureChallenge(AuthenticationFlowError.INTERNAL_ERROR,
-					context.form().setError("smsAuthSmsNotSent", e.getMessage())
-						.createErrorPage(Response.Status.INTERNAL_SERVER_ERROR));
-			}
-		} else {
-			context.failureChallenge(AuthenticationFlowError.CREDENTIAL_SETUP_REQUIRED,
-				context.form().setError("smsAuthMobileMissing").createErrorPage(Response.Status.NOT_FOUND));
+			context.challenge(context.form().setAttribute("realm", context.getRealm()).createForm(TPL_CODE));
+		} catch (Exception e) {
+			context.failureChallenge(AuthenticationFlowError.INTERNAL_ERROR,
+				context.form().setError("smsAuthSmsNotSent", e.getMessage())
+					.createErrorPage(Response.Status.INTERNAL_SERVER_ERROR));
 		}
 	}
 
