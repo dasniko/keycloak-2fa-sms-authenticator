@@ -4,6 +4,7 @@ import dasniko.keycloak.authenticator.gateway.SmsServiceFactory;
 import org.keycloak.authentication.AuthenticationFlowContext;
 import org.keycloak.authentication.AuthenticationFlowError;
 import org.keycloak.authentication.Authenticator;
+import org.keycloak.common.util.RandomString;
 import org.keycloak.models.AuthenticationExecutionModel;
 import org.keycloak.models.AuthenticatorConfigModel;
 import org.keycloak.models.KeycloakSession;
@@ -14,7 +15,6 @@ import org.keycloak.theme.Theme;
 
 import javax.ws.rs.core.Response;
 import java.util.Locale;
-import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * @author Niko Köbler, https://www.n-k.de, @dasniko
@@ -35,7 +35,7 @@ public class SmsAuthenticator implements Authenticator {
 		int length = Integer.parseInt(config.getConfig().get("length"));
 		int ttl = Integer.parseInt(config.getConfig().get("ttl"));
 
-		String code = generateAuthCode(length);
+		String code = RandomString.randomCode(length);
 		AuthenticationSessionModel authSession = context.getAuthenticationSession();
 		authSession.setAuthNote("code", code);
 		authSession.setAuthNote("ttl", Long.toString(System.currentTimeMillis() + (ttl * 1000)));
@@ -109,12 +109,6 @@ public class SmsAuthenticator implements Authenticator {
 
 	@Override
 	public void close() {
-	}
-
-	private String generateAuthCode(int length) {
-		double maxValue = Math.pow(10.0, length);
-		int randomNumber = ThreadLocalRandom.current().nextInt((int) maxValue);
-		return String.format("%0" + length + "d", randomNumber);
 	}
 
 }
