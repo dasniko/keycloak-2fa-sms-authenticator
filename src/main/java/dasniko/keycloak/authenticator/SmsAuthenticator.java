@@ -38,7 +38,7 @@ public class SmsAuthenticator implements Authenticator {
 		String code = RandomString.randomCode(length);
 		AuthenticationSessionModel authSession = context.getAuthenticationSession();
 		authSession.setAuthNote("code", code);
-		authSession.setAuthNote("ttl", Long.toString(System.currentTimeMillis() + (ttl * 1000)));
+		authSession.setAuthNote("ttl", Long.toString(System.currentTimeMillis() + (ttl * 1000L)));
 
 		try {
 			Theme theme = session.theme().getTheme(Theme.Type.LOGIN);

@@ -7,18 +7,14 @@ import org.keycloak.models.AuthenticationExecutionModel;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.KeycloakSessionFactory;
 import org.keycloak.provider.ProviderConfigProperty;
-import org.keycloak.provider.ServerInfoAwareProviderFactory;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author Niko Köbler, https://www.n-k.de, @dasniko
  */
-public class SmsAuthenticatorFactory implements AuthenticatorFactory, ServerInfoAwareProviderFactory {
+public class SmsAuthenticatorFactory implements AuthenticatorFactory {
 
 	@Override
 	public String getId() {
@@ -84,11 +80,6 @@ public class SmsAuthenticatorFactory implements AuthenticatorFactory, ServerInfo
 
 	@Override
 	public void close() {
-	}
-
-	@Override
-	public Map<String, String> getOperationalInfo() {
-		return Collections.singletonMap("Version", "demo");
 	}
 
 }
