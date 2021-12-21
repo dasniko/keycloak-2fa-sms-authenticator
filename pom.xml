@@ -9,13 +9,12 @@
 	<version>1.0-SNAPSHOT</version>
 
 	<properties>
-		<java.version>1.8</java.version>
+		<java.version>11</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.source>${java.version}</maven.compiler.source>
-		<maven.compiler.target>${java.version}</maven.compiler.target>
-		<aws.version>2.15.1</aws.version>
-		<keycloak.version>13.0.1</keycloak.version>
-		<maven-shade.version>3.2.4</maven-shade.version>
+		<aws.version>2.17.99</aws.version>
+		<keycloak.version>16.1.0</keycloak.version>
+		<maven.compiler.version>3.8.1</maven.compiler.version>
+		<maven.shade.version>3.2.4</maven.shade.version>
 	</properties>
 
 	<dependencies>
@@ -64,8 +63,16 @@
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${maven.compiler.version}</version>
+				<configuration>
+					<release>${java.version}</release>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
-				<version>${maven-shade.version}</version>
+				<version>${maven.shade.version}</version>
 				<executions>
 					<execution>
 						<phase>package</phase>
