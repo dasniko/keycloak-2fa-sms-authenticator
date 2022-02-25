@@ -34,6 +34,11 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
+			<groupId>org.jboss.resteasy</groupId>
+			<artifactId>resteasy-core</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
 			<groupId>software.amazon.awssdk</groupId>
 			<artifactId>sns</artifactId>
 			<version>${aws.version}</version>
@@ -49,8 +54,8 @@
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
-				<groupId>org.keycloak</groupId>
-				<artifactId>keycloak-parent</artifactId>
+				<groupId>com.github.dasniko</groupId>
+				<artifactId>keycloak-spi-bom</artifactId>
 				<version>${keycloak.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
@@ -58,8 +63,15 @@
 		</dependencies>
 	</dependencyManagement>
 
+	<repositories>
+		<repository>
+			<id>jitpack.io</id>
+			<url>https://jitpack.io</url>
+		</repository>
+	</repositories>
+
 	<build>
-		<finalName>${project.groupId}-${project.artifactId}-${project.version}</finalName>
+		<finalName>${project.groupId}.${project.artifactId}</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -81,12 +93,9 @@
 						</goals>
 						<configuration>
 							<artifactSet>
-								<excludes>
-									<exclude>com.fasterxml.jackson.core</exclude>
-									<exclude>org.apache.httpcomponents</exclude>
-									<exclude>commons-logging</exclude>
-									<exclude>commons-codec</exclude>
-								</excludes>
+								<includes>
+									<include>software.amazon.awssdk:*</include>
+								</includes>
 							</artifactSet>
 						</configuration>
 					</execution>
