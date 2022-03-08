@@ -34,11 +34,6 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.jboss.resteasy</groupId>
-			<artifactId>resteasy-core</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
 			<groupId>software.amazon.awssdk</groupId>
 			<artifactId>sns</artifactId>
 			<version>${aws.version}</version>
@@ -56,7 +51,8 @@
 			<dependency>
 				<groupId>com.github.dasniko</groupId>
 				<artifactId>keycloak-spi-bom</artifactId>
-				<version>${keycloak.version}</version>
+				<version>17-SNAPSHOT</version>
+<!--				<version>${keycloak.version}</version>-->
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
