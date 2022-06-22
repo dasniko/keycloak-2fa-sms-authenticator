@@ -1,6 +1,6 @@
-package dasniko.keycloak.authenticator;
+package netzbegruenun.keycloak.authenticator;
 
-import dasniko.keycloak.authenticator.gateway.SmsServiceFactory;
+import netzbegruenun.keycloak.authenticator.gateway.SmsServiceFactory;
 import org.keycloak.authentication.AuthenticationFlowContext;
 import org.keycloak.authentication.AuthenticationFlowError;
 import org.keycloak.authentication.Authenticator;
@@ -17,11 +17,12 @@ import javax.ws.rs.core.Response;
 import java.util.Locale;
 
 /**
- * @author Niko Köbler, https://www.n-k.de, @dasniko
+ * @author Niko Köbler, https://www.n-k.de, @netzbegruenun
  */
 public class SmsAuthenticator implements Authenticator {
 
 	private static final String TPL_CODE = "login-sms.ftl";
+	private static final String CREDENTIAL_TYPE  = "CREDENTIAL_TYPE";
 
 	@Override
 	public void authenticate(AuthenticationFlowContext context) {
@@ -105,6 +106,7 @@ public class SmsAuthenticator implements Authenticator {
 
 	@Override
 	public void setRequiredActions(KeycloakSession session, RealmModel realm, UserModel user) {
+		user.addRequiredAction("SET_MOBILE_NUMBER");
 	}
 
 	@Override

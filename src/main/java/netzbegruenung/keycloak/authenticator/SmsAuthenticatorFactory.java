@@ -1,4 +1,4 @@
-package dasniko.keycloak.authenticator;
+package netzbegruenun.keycloak.authenticator;
 
 import org.keycloak.Config;
 import org.keycloak.authentication.Authenticator;
@@ -7,11 +7,12 @@ import org.keycloak.models.AuthenticationExecutionModel;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.KeycloakSessionFactory;
 import org.keycloak.provider.ProviderConfigProperty;
+import org.keycloak.authentication.RequiredActionContext;
 
 import java.util.List;
 
 /**
- * @author Niko Köbler, https://www.n-k.de, @dasniko
+ * @author Niko Köbler, https://www.n-k.de, @netzbegruenun
  */
 public class SmsAuthenticatorFactory implements AuthenticatorFactory {
 
@@ -44,7 +45,7 @@ public class SmsAuthenticatorFactory implements AuthenticatorFactory {
 
 	@Override
 	public boolean isUserSetupAllowed() {
-		return false;
+		return true;
 	}
 
 	@Override

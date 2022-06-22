@@ -1,4 +1,4 @@
-package dasniko.keycloak.authenticator.gateway;
+package netzbegruenun.keycloak.authenticator.gateway;
 
 import software.amazon.awssdk.services.sns.SnsClient;
 import software.amazon.awssdk.services.sns.model.MessageAttributeValue;
@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author Niko Köbler, https://www.n-k.de, @dasniko
+ * @author Niko Köbler, https://www.n-k.de, @netzbegruenun
  */
 public class AwsSmsService implements SmsService {
 
