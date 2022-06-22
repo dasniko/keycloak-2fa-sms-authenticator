@@ -1,4 +1,4 @@
-package netzbegruenun.keycloak.authenticator;
+package netzbegruenung.keycloak.authenticator;
 
 import org.keycloak.Config;
 import org.keycloak.authentication.Authenticator;
@@ -12,7 +12,7 @@ import org.keycloak.authentication.RequiredActionContext;
 import java.util.List;
 
 /**
- * @author Niko Köbler, https://www.n-k.de, @netzbegruenun
+ * @author Netzbegruenung e.V.
  */
 public class SmsAuthenticatorFactory implements AuthenticatorFactory {
 

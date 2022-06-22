@@ -1,7 +1,7 @@
-package netzbegruenun.keycloak.authenticator;
+package netzbegruenung.keycloak.authenticator;
 
-import netzbegruenun.keycloak.authenticator.SmsAuthenticatorData;
-import netzbegruenun.keycloak.authenticator.SmsAuthenticatorModel;
+import netzbegruenung.keycloak.authenticator.SmsAuthenticatorData;
+import netzbegruenung.keycloak.authenticator.SmsAuthenticatorModel;
 import org.keycloak.common.util.Time;
 import org.keycloak.credential.CredentialModel;
 import org.keycloak.util.JsonSerialization;

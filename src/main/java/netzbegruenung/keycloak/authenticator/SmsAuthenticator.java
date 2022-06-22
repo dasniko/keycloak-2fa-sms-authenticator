@@ -1,6 +1,6 @@
-package netzbegruenun.keycloak.authenticator;
+package netzbegruenung.keycloak.authenticator;
 
-import netzbegruenun.keycloak.authenticator.gateway.SmsServiceFactory;
+import netzbegruenung.keycloak.authenticator.gateway.SmsServiceFactory;
 import org.keycloak.authentication.AuthenticationFlowContext;
 import org.keycloak.authentication.AuthenticationFlowError;
 import org.keycloak.authentication.Authenticator;
@@ -17,7 +17,7 @@ import javax.ws.rs.core.Response;
 import java.util.Locale;
 
 /**
- * @author Niko Köbler, https://www.n-k.de, @netzbegruenun
+ * @author Netzbegruenung e.V.
  */
 public class SmsAuthenticator implements Authenticator {
 

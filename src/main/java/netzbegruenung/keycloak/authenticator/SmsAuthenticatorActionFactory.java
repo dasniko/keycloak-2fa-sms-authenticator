@@ -15,9 +15,9 @@
  * limitations under the License.
  */
 
-package netzbegruenun.keycloak.authenticator;
+package netzbegruenung.keycloak.authenticator;
 
-import netzbegruenun.keycloak.authenticator.SmsAuthenticatorSetMobileNumberAction;
+import netzbegruenung.keycloak.authenticator.SmsAuthenticatorSetMobileNumberAction;
 import org.keycloak.Config;
 import org.keycloak.authentication.RequiredActionFactory;
 import org.keycloak.authentication.RequiredActionProvider;

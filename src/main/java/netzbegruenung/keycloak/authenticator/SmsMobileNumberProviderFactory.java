@@ -14,9 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package netzbegruenun.keycloak.authenticator;
+package netzbegruenung.keycloak.authenticator;
 
-import netzbegruenun.keycloak.authenticator.SmsMobileNumberProvider;
+import netzbegruenung.keycloak.authenticator.SmsMobileNumberProvider;
 
 import org.keycloak.credential.CredentialProvider;
 import org.keycloak.credential.CredentialProviderFactory;

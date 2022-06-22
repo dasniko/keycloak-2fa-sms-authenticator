@@ -14,9 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package netzbegruenun.keycloak.authenticator;
+package netzbegruenung.keycloak.authenticator;
 
-import netzbegruenun.keycloak.authenticator.SmsAuthenticatorModel;
+import netzbegruenung.keycloak.authenticator.SmsAuthenticatorModel;
 
 import org.jboss.logging.Logger;
 import org.keycloak.common.util.Time;
