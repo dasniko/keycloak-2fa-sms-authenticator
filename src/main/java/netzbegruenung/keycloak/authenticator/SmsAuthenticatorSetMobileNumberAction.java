@@ -24,18 +24,10 @@ public class SmsAuthenticatorSetMobileNumberAction implements RequiredActionProv
 	@Override
 	public void processAction(RequiredActionContext context) {
 		// Save input in mobile_number attribute
-		/*
-		String answer = (context.getHttpRequest().getDecodedFormParameters().getFirst("mobile_number"));
-		UserCredentialModel model = new UserCredentialModel();
-		model.setValue(answer);
-		model.setType(SmsAuthenticator.CREDENTIAL_TYPE);
-		context.getUser().updateCredentialDirectly(model);
-		context.success();
-		*/
 		String mobileNumber = (context.getHttpRequest().getDecodedFormParameters().getFirst("mobile_number"));
-	        SmsMobileNumberProvider smnp = (SmsMobileNumberProvider) context.getSession().getProvider(CredentialProvider.class, "mobile_number");
-	        smnp.createCredential(context.getRealm(), context.getUser(), SmsAuthenticatorModel.createSmsAuthenticator(mobileNumber));
-	        context.success();
+		SmsMobileNumberProvider smnp = (SmsMobileNumberProvider) context.getSession().getProvider(CredentialProvider.class, "mobile_number");
+		smnp.createCredential(context.getRealm(), context.getUser(), SmsAuthenticatorModel.createSmsAuthenticator(mobileNumber));
+		context.success();
 	}
 
 	public void close() {}
