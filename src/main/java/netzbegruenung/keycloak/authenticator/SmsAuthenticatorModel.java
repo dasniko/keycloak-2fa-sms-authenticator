@@ -29,7 +29,7 @@ public class SmsAuthenticatorModel extends CredentialModel {
 			SmsAuthenticatorData credentialData = JsonSerialization.readValue(credentialModel.getCredentialData(), SmsAuthenticatorData.class);
 
 			SmsAuthenticatorModel SmsAuthenticatorModel = new SmsAuthenticatorModel(credentialData);
-			SmsAuthenticatorModel.setUserLabel(credentialModel.getUserLabel());
+			SmsAuthenticatorModel.setUserLabel("Mobile Number");
 			SmsAuthenticatorModel.setCreatedDate(credentialModel.getCreatedDate());
 			SmsAuthenticatorModel.setType(TYPE);
 			SmsAuthenticatorModel.setId(credentialModel.getId());
