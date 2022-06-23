@@ -9,7 +9,7 @@
 					<label for="code" class="${properties.kcLabelClass!}">${msg("smsPhoneNumberLabel")}</label>
 				</div>
 				<div class="${properties.kcInputWrapperClass!}">
-					<input type="text" id="code" name="code" class="${properties.kcInputClass!}" autofocus/>
+					<input type="text" id="code" name="mobile_number" class="${properties.kcInputClass!}" autofocus/>
 				</div>
 			</div>
 			<div class="${properties.kcFormGroupClass!} ${properties.kcFormSettingClass!}">
