@@ -28,7 +28,7 @@ public class SmsAuthenticatorSetMobileNumberAction implements RequiredActionProv
 	public void processAction(RequiredActionContext context) {
 		// Save input in mobile_number attribute
 		String mobileNumber = (context.getHttpRequest().getDecodedFormParameters().getFirst("mobile_number"));
-		SmsMobileNumberProvider smnp = (SmsMobileNumberProvider) context.getSession().getProvider(CredentialProvider.class, "mobile_number");
+		SmsMobileNumberProvider smnp = (SmsMobileNumberProvider) context.getSession().getProvider(CredentialProvider.class, "MOBILE_NUMBER");
 		if (!smnp.isConfiguredFor(context.getRealm(), context.getUser(), SmsAuthenticatorModel.TYPE)) {
 			smnp.createCredential(context.getRealm(), context.getUser(), SmsAuthenticatorModel.createSmsAuthenticator(mobileNumber));
 		} else {
