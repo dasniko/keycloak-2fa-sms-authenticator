@@ -45,7 +45,7 @@ public class SmsAuthenticatorActionFactory implements RequiredActionFactory {
 
     @Override
     public String getDisplayText() {
-        return "Mobile Number";
+        return "Update Mobile Number";
     }
 
     @Override
