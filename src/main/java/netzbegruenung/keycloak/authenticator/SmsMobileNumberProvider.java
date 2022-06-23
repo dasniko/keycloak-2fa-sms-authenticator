@@ -82,15 +82,16 @@ public class SmsMobileNumberProvider implements CredentialProvider<SmsAuthentica
 
     @Override
     public CredentialModel createCredential(RealmModel realm, UserModel user, SmsAuthenticatorModel credentialModel) {
-        if (credentialModel.getCreatedDate() == null) {
-            credentialModel.setCreatedDate(Time.currentTimeMillis());
-            logger.warn(String.format("Create Credentials in SmsMobileNumberProvider with credential model: [%s]", credentialModel.getCredentialData()));
-            return getCredentialStore().createCredential(realm, user, credentialModel);
-        } else {
-            getCredentialStore().updateCredential(realm, user, credentialModel);
-            logger.warn(String.format("Update Credentials in SmsMobileNumberProvider with credential model: [%s]", credentialModel.getCredentialData()));
-            return credentialModel;
-        }
+        credentialModel.setCreatedDate(Time.currentTimeMillis());
+        logger.warn(String.format("Create Credentials in SmsMobileNumberProvider with credential model: [%s]", credentialModel.getCredentialData()));
+        return getCredentialStore().createCredential(realm, user, credentialModel);
+    }
+
+    public CredentialModel updateModel(RealmModel realm, UserModel user) {
+        SmsAuthenticatorModel credentialModel = getCredentialStore().getStoredCredentialsByTypeStream(realm, user, SmsAuthenticatorModel.TYPE).getFirst();
+        getCredentialStore().updateCredential(realm, user, credentialModel);
+        logger.warn(String.format("Update Credentials in SmsMobileNumberProvider with credential model: [%s]", credentialModel.getCredentialData()));
+        return credentialModel;
     }
 
     @Override
