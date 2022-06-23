@@ -85,6 +85,7 @@ public class SmsMobileNumberProvider implements CredentialProvider<SmsAuthentica
         if (credentialModel.getCreatedDate() == null) {
             credentialModel.setCreatedDate(Time.currentTimeMillis());
         }
+        logger.debug(String.format("Create Credentials in SmsMobileNumberProvider with credential model: [%s]", credentialModel.getCredentialData()));
         return getCredentialStore().createCredential(realm, user, credentialModel);
     }
 
