@@ -87,16 +87,14 @@ public class SmsMobileNumberProvider implements CredentialProvider<SmsAuthentica
         return getCredentialStore().createCredential(realm, user, credentialModel);
     }
 
-    public CredentialModel updateModel(RealmModel realm, UserModel user) {
+    public void updateCredential(RealmModel realm, UserModel user) {
         Optional<CredentialModel> model = getCredentialStore().getStoredCredentialsByTypeStream(realm, user, SmsAuthenticatorModel.TYPE).findFirst();
         if (model.isPresent()) {
             CredentialModel credentialModel = model.get();
             getCredentialStore().updateCredential(realm, user, credentialModel);
             logger.warn(String.format("Update Credentials in SmsMobileNumberProvider with credential model: [%s]", credentialModel.getCredentialData()));
-            return credentialModel;
         } else {
             logger.error("Error occurred during model update");
-            return new CredentialModel();
         }
     }
 

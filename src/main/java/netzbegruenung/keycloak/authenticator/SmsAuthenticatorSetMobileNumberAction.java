@@ -32,7 +32,7 @@ public class SmsAuthenticatorSetMobileNumberAction implements RequiredActionProv
 		if (smnp.isConfiguredFor(context.getRealm(), context.getUser(), SmsAuthenticatorModel.TYPE)) {
 			smnp.createCredential(context.getRealm(), context.getUser(), SmsAuthenticatorModel.createSmsAuthenticator(mobileNumber));
 		} else {
-			SmsAuthenticatorModel sam = smnp.updateCredential(context.getRealm(), context.getUser());
+			smnp.updateCredential(context.getRealm(), context.getUser());
 		}
 		LOG.warn(String.format("Process Action completed, mobile number extracted from form: [%s]", mobileNumber));
 		context.success();
