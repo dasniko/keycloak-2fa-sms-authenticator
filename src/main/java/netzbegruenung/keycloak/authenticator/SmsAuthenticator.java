@@ -1,6 +1,7 @@
 package netzbegruenung.keycloak.authenticator;
 
 import netzbegruenung.keycloak.authenticator.gateway.SmsServiceFactory;
+import netzbegruenung.keycloak.authenticator.SmsMobileNumberProvider;
 import org.keycloak.authentication.AuthenticationFlowContext;
 import org.keycloak.authentication.AuthenticationFlowError;
 import org.keycloak.authentication.Authenticator;
@@ -101,7 +102,8 @@ public class SmsAuthenticator implements Authenticator {
 
 	@Override
 	public boolean configuredFor(KeycloakSession session, RealmModel realm, UserModel user) {
-		return user.getFirstAttribute("mobile_number") != null;
+		SmsMobileNumberProvider smnp = new SmsMobileNumberProvider(session);
+		return smnp.isConfiguredFor(realm, user, "mobile_number");
 	}
 
 	@Override
