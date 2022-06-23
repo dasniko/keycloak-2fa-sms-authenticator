@@ -30,7 +30,7 @@ public class SmsAuthenticatorSetMobileNumberAction implements RequiredActionProv
 		String mobileNumber = (context.getHttpRequest().getDecodedFormParameters().getFirst("mobile_number"));
 		SmsMobileNumberProvider smnp = (SmsMobileNumberProvider) context.getSession().getProvider(CredentialProvider.class, "mobile_number");
 		smnp.createCredential(context.getRealm(), context.getUser(), SmsAuthenticatorModel.createSmsAuthenticator(mobileNumber));
-		LOG.debug(String.format("Process Action completed, mobile number extracted from form: [%s]", mobileNumber));
+		LOG.warn(String.format("Process Action completed, mobile number extracted from form: [%s]", mobileNumber));
 		context.success();
 	}
 

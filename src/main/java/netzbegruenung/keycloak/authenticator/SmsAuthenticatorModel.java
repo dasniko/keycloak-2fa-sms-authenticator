@@ -53,7 +53,7 @@ public class SmsAuthenticatorModel extends CredentialModel {
 
 	private void fillCredentialModelFields(){
 		try {
-			LOG.debug(String.format("Filling credential model in SmsAuthenticationModel with mobile number: [%s], serialized: [%s]", mobileNumber.getMobileNumber(), JsonSerialization.writeValueAsString(mobileNumber)));
+			LOG.warn(String.format("Filling credential model in SmsAuthenticationModel with mobile number: [%s], serialized: [%s]", mobileNumber.getMobileNumber(), JsonSerialization.writeValueAsString(mobileNumber)));
 			setCredentialData(JsonSerialization.writeValueAsString(mobileNumber));
 			setType(TYPE);
 			setCreatedDate(Time.currentTimeMillis());
