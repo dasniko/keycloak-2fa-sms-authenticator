@@ -31,7 +31,7 @@ import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.RealmModel;
 import org.keycloak.models.UserCredentialModel;
 import org.keycloak.models.UserModel;
-
+import java.util.Optional;
 
 /**
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
@@ -88,10 +88,16 @@ public class SmsMobileNumberProvider implements CredentialProvider<SmsAuthentica
     }
 
     public CredentialModel updateModel(RealmModel realm, UserModel user) {
-        SmsAuthenticatorModel credentialModel = getCredentialStore().getStoredCredentialsByTypeStream(realm, user, SmsAuthenticatorModel.TYPE).getFirst();
-        getCredentialStore().updateCredential(realm, user, credentialModel);
-        logger.warn(String.format("Update Credentials in SmsMobileNumberProvider with credential model: [%s]", credentialModel.getCredentialData()));
-        return credentialModel;
+        Optional<CredentialModel> model = getCredentialStore().getStoredCredentialsByTypeStream(realm, user, SmsAuthenticatorModel.TYPE).findFirst();
+        if (model.isPresent()) {
+            CredentialModel credentialModel = model.get();
+            getCredentialStore().updateCredential(realm, user, credentialModel);
+            logger.warn(String.format("Update Credentials in SmsMobileNumberProvider with credential model: [%s]", credentialModel.getCredentialData()));
+            return credentialModel;
+        } else {
+            logger.error("Error occurred during model update");
+            return new CredentialModel();
+        }
     }
 
     @Override
