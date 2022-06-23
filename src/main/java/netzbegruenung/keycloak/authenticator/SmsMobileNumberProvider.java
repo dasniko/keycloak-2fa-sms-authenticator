@@ -117,6 +117,7 @@ public class SmsMobileNumberProvider implements CredentialProvider<SmsAuthentica
                 .displayName(SmsMobileNumberProviderFactory.PROVIDER_ID)
                 .helpText("secret-question-text")
                 .createAction(SmsAuthenticatorFactory.PROVIDER_ID)
+                .updateAction(SmsAuthenticatorFactory.PROVIDER_ID)
                 .removeable(false)
                 .build(session);
     }

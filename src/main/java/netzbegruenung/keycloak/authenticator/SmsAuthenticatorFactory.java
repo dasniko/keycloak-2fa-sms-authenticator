@@ -24,18 +24,17 @@ public class SmsAuthenticatorFactory implements AuthenticatorFactory {
 	}
 
 	@Override
-	public String getDisplayType() {
-		return "SMS Authentication (2FA)";
+	public Authenticator create(KeycloakSession session) {
+		return new SmsAuthenticator();
 	}
 
+	private static AuthenticationExecutionModel.Requirement[] REQUIREMENT_CHOICES = {
+		AuthenticationExecutionModel.Requirement.REQUIRED,
+		AuthenticationExecutionModel.Requirement.ALTERNATIVE
+	};
 	@Override
-	public String getHelpText() {
-		return "Validates an OTP sent via SMS to the users mobile phone.";
-	}
-
-	@Override
-	public String getReferenceCategory() {
-		return "otp";
+	public AuthenticationExecutionModel.Requirement[] getRequirementChoices() {
+		return REQUIREMENT_CHOICES;
 	}
 
 	@Override
@@ -49,11 +48,6 @@ public class SmsAuthenticatorFactory implements AuthenticatorFactory {
 	}
 
 	@Override
-	public AuthenticationExecutionModel.Requirement[] getRequirementChoices() {
-		return REQUIREMENT_CHOICES;
-	}
-
-	@Override
 	public List<ProviderConfigProperty> getConfigProperties() {
 		return List.of(
 			new ProviderConfigProperty("length", "Code length", "The number of digits of the generated code.", ProviderConfigProperty.STRING_TYPE, 6),
@@ -64,8 +58,18 @@ public class SmsAuthenticatorFactory implements AuthenticatorFactory {
 	}
 
 	@Override
-	public Authenticator create(KeycloakSession session) {
-		return new SmsAuthenticator();
+	public String getHelpText() {
+		return "Validates an OTP sent via SMS to the users mobile phone.";
+	}
+
+	@Override
+	public String getDisplayType() {
+		return "SMS Authentication (2FA)";
+	}
+
+	@Override
+	public String getReferenceCategory() {
+		return "otp";
 	}
 
 	@Override
