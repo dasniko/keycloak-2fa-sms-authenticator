@@ -28,7 +28,7 @@ import org.keycloak.models.KeycloakSession;
  */
 public class SmsMobileNumberProviderFactory implements CredentialProviderFactory<SmsMobileNumberProvider> {
 
-    public static final String PROVIDER_ID =  "mobile_number";
+    public static final String PROVIDER_ID =  "MOBILE_NUMBER";
 
     @Override
     public String getId() {
