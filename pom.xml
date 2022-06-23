@@ -5,8 +5,8 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>netzbegruenung</groupId>
-	<artifactId>keycloak-2fa-sms-authenticator</artifactId>
-	<version>main-SNAPSHOT</version>
+	<artifactId>keycloak-2fa-email-authenticator</artifactId>
+	<version>0.9</version>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -22,31 +22,36 @@
 			<url>https://jitpack.io</url>
 		</repository>
 	</repositories>
-
+<!--
 	<dependencyManagement>
 		<dependencies>
-<!--			<dependency>
+			<dependency>
 				<groupId>com.github.netzbegruenung</groupId>
 				<artifactId>keycloak-spi-bom</artifactId>
-				<version>main-SNAPSHOT</version>
-			</dependency>-->
-			<dependency>
-				<groupId>org.keycloak</groupId>
-				<artifactId>keycloak-server-spi</artifactId>
-				<type>jar</type>
-			</dependency>
-			<dependency>
-				<groupId>org.keycloak</groupId>
-				<artifactId>keycloak-server-spi-private</artifactId>
-				<type>jar</type>
-			</dependency>
-			<dependency>
-				<groupId>org.keycloak</groupId>
-				<artifactId>keycloak-services</artifactId>
-				<type>jar</type>
+				<version>-SNAPSHOT</version>
+				<type>pom</type>
+				<scope>import</scope>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
+-->
+	<dependencies>
+		<dependency>
+			<groupId>org.keycloak</groupId>
+			<artifactId>keycloak-server-spi</artifactId>
+			<version>18.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.keycloak</groupId>
+			<artifactId>keycloak-server-spi-private</artifactId>
+			<version>18.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.keycloak</groupId>
+			<artifactId>keycloak-services</artifactId>
+			<version>18.0.1</version>
+		</dependency>
+	</dependencies>
 
 	<build>
 		<finalName>${project.groupId}.${project.artifactId}</finalName>
