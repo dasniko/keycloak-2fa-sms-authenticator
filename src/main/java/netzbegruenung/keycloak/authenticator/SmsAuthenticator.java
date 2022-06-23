@@ -1,10 +1,13 @@
-package dasniko.keycloak.authenticator;
+package netzbegruenung.keycloak.authenticator;
 
-import dasniko.keycloak.authenticator.gateway.SmsServiceFactory;
+import netzbegruenung.keycloak.authenticator.gateway.SmsServiceFactory;
+import netzbegruenung.keycloak.authenticator.SmsMobileNumberProvider;
 import org.keycloak.authentication.AuthenticationFlowContext;
 import org.keycloak.authentication.AuthenticationFlowError;
 import org.keycloak.authentication.Authenticator;
 import org.keycloak.common.util.SecretGenerator;
+import org.keycloak.credential.CredentialModel;
+import org.keycloak.credential.CredentialProvider;
 import org.keycloak.models.AuthenticationExecutionModel;
 import org.keycloak.models.AuthenticatorConfigModel;
 import org.keycloak.models.KeycloakSession;
@@ -15,13 +18,15 @@ import org.keycloak.theme.Theme;
 
 import javax.ws.rs.core.Response;
 import java.util.Locale;
+import java.util.Optional;
 
 /**
- * @author Niko Köbler, https://www.n-k.de, @dasniko
+ * @author Netzbegruenung e.V.
  */
 public class SmsAuthenticator implements Authenticator {
 
 	private static final String TPL_CODE = "login-sms.ftl";
+	private static final String CREDENTIAL_TYPE  = "MOBILE_NUMBER";
 
 	@Override
 	public void authenticate(AuthenticationFlowContext context) {
@@ -100,15 +105,20 @@ public class SmsAuthenticator implements Authenticator {
 
 	@Override
 	public boolean configuredFor(KeycloakSession session, RealmModel realm, UserModel user) {
-		return user.getFirstAttribute("mobile_number") != null;
+		SmsMobileNumberProvider smnp = (SmsMobileNumberProvider) session.getProvider(CredentialProvider.class, "MOBILE_NUMBER");
+		return smnp.isConfiguredFor(realm, user, "MOBILE_NUMBER");
 	}
 
 	@Override
 	public void setRequiredActions(KeycloakSession session, RealmModel realm, UserModel user) {
+		user.addRequiredAction("SET_MOBILE_NUMBER");
 	}
 
 	@Override
 	public void close() {
 	}
 
+    public SmsMobileNumberProviderFactory getCredentialProvider(KeycloakSession session) {
+        return (SmsMobileNumberProviderFactory)session.getProvider(CredentialProvider.class, SmsMobileNumberProviderFactory.PROVIDER_ID);
+    }
 }

@@ -4,13 +4,12 @@
 				 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>dasniko</groupId>
-	<artifactId>keycloak-2fa-sms-authenticator</artifactId>
-	<version>1.0-SNAPSHOT</version>
+	<groupId>netzbegruenung</groupId>
+	<artifactId>keycloak-2fa-email-authenticator</artifactId>
+	<version>0.9</version>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<aws.version>2.17.183</aws.version>
 		<keycloak.version>18.0.0</keycloak.version>
 		<maven.compiler.release>11</maven.compiler.release>
 		<maven.compiler.version>3.8.1</maven.compiler.version>
@@ -23,42 +22,34 @@
 			<url>https://jitpack.io</url>
 		</repository>
 	</repositories>
-
+<!--
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
-				<groupId>com.github.dasniko</groupId>
+				<groupId>com.github.netzbegruenung</groupId>
 				<artifactId>keycloak-spi-bom</artifactId>
-				<version>${keycloak.version}</version>
+				<version>-SNAPSHOT</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
-
+-->
 	<dependencies>
 		<dependency>
 			<groupId>org.keycloak</groupId>
 			<artifactId>keycloak-server-spi</artifactId>
+			<version>18.0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.keycloak</groupId>
 			<artifactId>keycloak-server-spi-private</artifactId>
+			<version>18.0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.keycloak</groupId>
 			<artifactId>keycloak-services</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>software.amazon.awssdk</groupId>
-			<artifactId>sns</artifactId>
-			<version>${aws.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>software.amazon.awssdk</groupId>
-					<artifactId>netty-nio-client</artifactId>
-				</exclusion>
-			</exclusions>
+			<version>18.0.1</version>
 		</dependency>
 	</dependencies>
 
@@ -83,7 +74,6 @@
 						<configuration>
 							<artifactSet>
 								<includes>
-									<include>software.amazon.awssdk:*</include>
 									<include>org.reactivestreams:reactive-streams</include>
 								</includes>
 							</artifactSet>

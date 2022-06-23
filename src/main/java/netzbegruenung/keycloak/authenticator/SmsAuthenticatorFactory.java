@@ -1,4 +1,4 @@
-package dasniko.keycloak.authenticator;
+package netzbegruenung.keycloak.authenticator;
 
 import org.keycloak.Config;
 import org.keycloak.authentication.Authenticator;
@@ -7,11 +7,12 @@ import org.keycloak.models.AuthenticationExecutionModel;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.KeycloakSessionFactory;
 import org.keycloak.provider.ProviderConfigProperty;
+import org.keycloak.authentication.RequiredActionContext;
 
 import java.util.List;
 
 /**
- * @author Niko Köbler, https://www.n-k.de, @dasniko
+ * @author Netzbegruenung e.V.
  */
 public class SmsAuthenticatorFactory implements AuthenticatorFactory {
 
@@ -23,18 +24,17 @@ public class SmsAuthenticatorFactory implements AuthenticatorFactory {
 	}
 
 	@Override
-	public String getDisplayType() {
-		return "SMS Authentication";
+	public Authenticator create(KeycloakSession session) {
+		return new SmsAuthenticator();
 	}
 
+	private static AuthenticationExecutionModel.Requirement[] REQUIREMENT_CHOICES = {
+		AuthenticationExecutionModel.Requirement.REQUIRED,
+		AuthenticationExecutionModel.Requirement.ALTERNATIVE
+	};
 	@Override
-	public String getHelpText() {
-		return "Validates an OTP sent via SMS to the users mobile phone.";
-	}
-
-	@Override
-	public String getReferenceCategory() {
-		return "otp";
+	public AuthenticationExecutionModel.Requirement[] getRequirementChoices() {
+		return REQUIREMENT_CHOICES;
 	}
 
 	@Override
@@ -44,12 +44,7 @@ public class SmsAuthenticatorFactory implements AuthenticatorFactory {
 
 	@Override
 	public boolean isUserSetupAllowed() {
-		return false;
-	}
-
-	@Override
-	public AuthenticationExecutionModel.Requirement[] getRequirementChoices() {
-		return REQUIREMENT_CHOICES;
+		return true;
 	}
 
 	@Override
@@ -63,8 +58,18 @@ public class SmsAuthenticatorFactory implements AuthenticatorFactory {
 	}
 
 	@Override
-	public Authenticator create(KeycloakSession session) {
-		return new SmsAuthenticator();
+	public String getHelpText() {
+		return "Validates an OTP sent via SMS to the users mobile phone.";
+	}
+
+	@Override
+	public String getDisplayType() {
+		return "SMS Authentication (2FA)";
+	}
+
+	@Override
+	public String getReferenceCategory() {
+		return "otp";
 	}
 
 	@Override
