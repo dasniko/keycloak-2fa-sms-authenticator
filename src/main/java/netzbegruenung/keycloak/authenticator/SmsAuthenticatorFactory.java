@@ -53,7 +53,15 @@ public class SmsAuthenticatorFactory implements AuthenticatorFactory {
 			new ProviderConfigProperty("length", "Code length", "The number of digits of the generated code.", ProviderConfigProperty.STRING_TYPE, 6),
 			new ProviderConfigProperty("ttl", "Time-to-live", "The time to live in seconds for the code to be valid.", ProviderConfigProperty.STRING_TYPE, "300"),
 			new ProviderConfigProperty("senderId", "SenderId", "The sender ID is displayed as the message sender on the receiving device.", ProviderConfigProperty.STRING_TYPE, "Keycloak"),
-			new ProviderConfigProperty("simulation", "Simulation mode", "In simulation mode, the SMS won't be sent, but printed to the server logs", ProviderConfigProperty.BOOLEAN_TYPE, true)
+			new ProviderConfigProperty("simulation", "Simulation mode", "In simulation mode, the SMS won't be sent, but printed to the server logs", ProviderConfigProperty.BOOLEAN_TYPE, true),
+			new ProviderConfigProperty("smsapi", "SMS API URL", "The path to the API that receives an HTTP request.", ProviderConfigProperty.STRING_TYPE, "https://example.com/api/sms/send"),
+			new ProviderConfigProperty("type", "Request Type", "'JSON': send data as JSON in HTTP POST. 'GET': send data as HTTP GET parameters", ProviderConfigProperty.STRING_TYPE, "GET"),
+			new ProviderConfigProperty("apitokenattribute", "API Secret Token Attribute", "Name of attribute that contains your API token/secret.", ProviderConfigProperty.STRING_TYPE, ""),
+			new ProviderConfigProperty("apitoken", "API Secret Token", "Your API secret/token.", ProviderConfigProperty.STRING_TYPE, "changeme"),
+			new ProviderConfigProperty("apiuser", "Basic Auth Username", "If set, Basic Auth will be performed. Leave empty if not required.", ProviderConfigProperty.STRING_TYPE, ""),
+			new ProviderConfigProperty("messageattribute", "Message Atrribute", "The attribute that contains the SMS message.", ProviderConfigProperty.STRING_TYPE, "text"),
+			new ProviderConfigProperty("receiverattribute", "Receiver Phone Number Attribute", "The attribute that contains the reciever phone number.", ProviderConfigProperty.STRING_TYPE, "to"),
+			new ProviderConfigProperty("senderattribute", "Sender Phone Number Attribute", "The attribute that contains the sender phone number. Leave empty if not required.", ProviderConfigProperty.STRING_TYPE, "from")
 		);
 	}
 
