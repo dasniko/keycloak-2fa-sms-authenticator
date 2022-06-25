@@ -18,7 +18,6 @@ package netzbegruenung.keycloak.authenticator;
 
 import netzbegruenung.keycloak.authenticator.SmsAuthenticatorModel;
 
-import org.jboss.logging.Logger;
 import org.keycloak.common.util.Time;
 import org.keycloak.credential.CredentialInput;
 import org.keycloak.credential.CredentialInputUpdater;
@@ -39,7 +38,6 @@ import java.util.*;
  * @version $Revision: 1 $
  */
 public class SmsMobileNumberProvider implements CredentialProvider<SmsAuthenticatorModel>, CredentialInputValidator, CredentialInputUpdater {
-    private static final Logger logger = Logger.getLogger(SmsMobileNumberProvider.class);
 
     protected KeycloakSession session;
 
@@ -55,7 +53,6 @@ public class SmsMobileNumberProvider implements CredentialProvider<SmsAuthentica
     @Override
     public boolean isValid(RealmModel realm, UserModel user, CredentialInput input) {
         if (!(input instanceof UserCredentialModel)) {
-            logger.debug("Expected instance of UserCredentialModel for CredentialInput");
             return false;
         }
         if (!input.getType().equals(getType())) {
@@ -84,7 +81,6 @@ public class SmsMobileNumberProvider implements CredentialProvider<SmsAuthentica
     @Override
     public CredentialModel createCredential(RealmModel realm, UserModel user, SmsAuthenticatorModel credentialModel) {
         credentialModel.setCreatedDate(Time.currentTimeMillis());
-        logger.warn(String.format("Create Credentials in SmsMobileNumberProvider with credential model: [%s]", credentialModel.getCredentialData()));
         return getCredentialStore().createCredential(realm, user, credentialModel);
     }
 
@@ -96,10 +92,8 @@ public class SmsMobileNumberProvider implements CredentialProvider<SmsAuthentica
             CredentialModel credentialModel = model.get();
             deleteCredential(realm, user, credentialModel.getId());
             createCredential(realm, user, SmsAuthenticatorModel.createSmsAuthenticator(mobileNumber));
-            logger.warn(String.format("Update Credentials in SmsMobileNumberProvider with credential model: [%s]", credentialModel.getCredentialData()));
             return true;
         } else {
-            logger.error("Error occurred during model update");
             return false;
         }
     }
