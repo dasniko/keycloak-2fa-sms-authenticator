@@ -5,6 +5,7 @@ import netzbegruenung.keycloak.authenticator.SmsAuthenticatorModel;
 import org.keycloak.Config;
 import org.keycloak.authentication.CredentialRegistrator;
 import org.keycloak.authentication.DisplayTypeRequiredActionFactory;
+import org.keycloak.authentication.InitiatedActionSupport;
 import org.keycloak.authentication.RequiredActionContext;
 import org.keycloak.authentication.RequiredActionFactory;
 import org.keycloak.authentication.RequiredActionProvider;
@@ -20,6 +21,11 @@ public class SmsAuthenticatorSetMobileNumberAction implements RequiredActionProv
 
 	public static String PROVIDER_ID = "mobile_number_config";
 	private static final Logger LOG = Logger.getLogger(SmsAuthenticatorSetMobileNumberAction.class);
+
+	@Override
+    public InitiatedActionSupport initiatedActionSupport() {
+        return InitiatedActionSupport.SUPPORTED;
+    }
 
 	@Override
 	public void evaluateTriggers(RequiredActionContext requiredActionContext) {}
