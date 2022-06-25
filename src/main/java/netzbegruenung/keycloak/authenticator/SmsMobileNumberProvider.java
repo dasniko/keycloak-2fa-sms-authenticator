@@ -21,6 +21,7 @@ import netzbegruenung.keycloak.authenticator.SmsAuthenticatorModel;
 import org.jboss.logging.Logger;
 import org.keycloak.common.util.Time;
 import org.keycloak.credential.CredentialInput;
+import org.keycloak.credential.CredentialInputUpdater;
 import org.keycloak.credential.CredentialInputValidator;
 import org.keycloak.credential.CredentialModel;
 import org.keycloak.credential.CredentialProvider;
@@ -31,13 +32,13 @@ import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.RealmModel;
 import org.keycloak.models.UserCredentialModel;
 import org.keycloak.models.UserModel;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @version $Revision: 1 $
  */
-public class SmsMobileNumberProvider implements CredentialProvider<SmsAuthenticatorModel>, CredentialInputValidator {
+public class SmsMobileNumberProvider implements CredentialProvider<SmsAuthenticatorModel>, CredentialInputValidator, CredentialInputUpdater {
     private static final Logger logger = Logger.getLogger(SmsMobileNumberProvider.class);
 
     protected KeycloakSession session;
@@ -87,15 +88,19 @@ public class SmsMobileNumberProvider implements CredentialProvider<SmsAuthentica
         return getCredentialStore().createCredential(realm, user, credentialModel);
     }
 
-    public void updateCredential(RealmModel realm, UserModel user, String mobileNumber) {
+    @Override
+    public boolean updateCredential(RealmModel realm, UserModel user, CredentialInput input) {
+        String mobileNumber = input.getChallengeResponse();
         Optional<CredentialModel> model = getCredentialStore().getStoredCredentialsByTypeStream(realm, user, SmsAuthenticatorModel.TYPE).reduce((first, second) -> first);
         if (model.isPresent()) {
             CredentialModel credentialModel = model.get();
             deleteCredential(realm, user, credentialModel.getId());
             createCredential(realm, user, SmsAuthenticatorModel.createSmsAuthenticator(mobileNumber));
             logger.warn(String.format("Update Credentials in SmsMobileNumberProvider with credential model: [%s]", credentialModel.getCredentialData()));
+            return true;
         } else {
             logger.error("Error occurred during model update");
+            return false;
         }
     }
 
@@ -114,16 +119,25 @@ public class SmsMobileNumberProvider implements CredentialProvider<SmsAuthentica
         return CredentialTypeMetadata.builder()
                 .type(getType())
                 .category(CredentialTypeMetadata.Category.TWO_FACTOR)
-                .displayName(SmsMobileNumberProviderFactory.PROVIDER_ID)
-                .helpText("secret-question-text")
-                .createAction(SmsAuthenticatorFactory.PROVIDER_ID)
-                .updateAction(SmsAuthenticatorFactory.PROVIDER_ID)
-                .removeable(false)
+                .displayName("smsAuthenticator")
+                .helpText("smsPhoneUpdate")
+                .createAction(SmsAuthenticatorSetMobileNumberAction.PROVIDER_ID)
+                .removeable(true)
                 .build(session);
     }
 
     @Override
     public String getType() {
         return SmsAuthenticatorModel.TYPE;
+    }
+
+    @Override
+    public Set<String> getDisableableCredentialTypes(RealmModel realm, UserModel user) {
+        return Collections.EMPTY_SET;
+    }
+
+    @Override
+    public void disableCredentialType(RealmModel realm, UserModel user, String credentialType) {
+        return;
     }
 }

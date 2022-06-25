@@ -1,5 +1,6 @@
 package netzbegruenung.keycloak.authenticator;
 
+import netzbegruenung.keycloak.authenticator.SmsMobileNumberProvider;
 import org.keycloak.Config;
 import org.keycloak.authentication.Authenticator;
 import org.keycloak.authentication.AuthenticatorFactory;
@@ -17,7 +18,9 @@ import java.util.List;
  */
 public class SmsAuthenticatorFactory implements AuthenticatorFactory {
 
-	public static final String PROVIDER_ID = "sms-authenticator";
+	public static final String PROVIDER_ID = "mobile-number-authenticator";
+	private static final SmsAuthenticator SINGLETON = new SmsAuthenticator();
+
 
 	@Override
 	public String getId() {
@@ -25,13 +28,14 @@ public class SmsAuthenticatorFactory implements AuthenticatorFactory {
 	}
 
 	@Override
-	public Authenticator create(KeycloakSession session) {
-		return new SmsAuthenticator();
-	}
+    public Authenticator create(KeycloakSession session) {
+        return SINGLETON;
+    }
 
 	private static AuthenticationExecutionModel.Requirement[] REQUIREMENT_CHOICES = {
 		AuthenticationExecutionModel.Requirement.REQUIRED,
-		AuthenticationExecutionModel.Requirement.ALTERNATIVE
+		AuthenticationExecutionModel.Requirement.ALTERNATIVE,
+		AuthenticationExecutionModel.Requirement.DISABLED
 	};
 	@Override
 	public AuthenticationExecutionModel.Requirement[] getRequirementChoices() {
@@ -78,7 +82,7 @@ public class SmsAuthenticatorFactory implements AuthenticatorFactory {
 
 	@Override
 	public String getReferenceCategory() {
-		return "otp";
+		return "mobile-number";
 	}
 
 	@Override
