@@ -47,12 +47,13 @@ public class SmsAuthenticator implements Authenticator, CredentialValidator<SmsM
 		Optional<CredentialModel> model = context.getSession().userCredentialManager().getStoredCredentialsByTypeStream(context.getRealm(), user, SmsAuthenticatorModel.TYPE).reduce((first, second) -> first);
 		String mobileNumber = "";
 		try {
-			mobileNumber = JsonSerialization.readValue(model.get().getCredentialData(), SmsAuthenticatorModel.class).getCredentialData();
-		} catch (IOException e) {
+			String credentialData = JsonSerialization.readValue(model.get().getCredentialData(), SmsAuthenticatorData.class).getMobileNumber();
+		} catch (IOException e1) {
 			context.failureChallenge(AuthenticationFlowError.INTERNAL_ERROR,
-					context.form().setError("smsAuthSmsNotSent", e.getMessage())
+					context.form().setError("smsAuthSmsNotSent", "Error. Use another method.")
 						.createErrorPage(Response.Status.INTERNAL_SERVER_ERROR));
 		}
+
 
 		int length = Integer.parseInt(config.getConfig().get("length"));
 		int ttl = Integer.parseInt(config.getConfig().get("ttl"));
@@ -73,7 +74,7 @@ public class SmsAuthenticator implements Authenticator, CredentialValidator<SmsM
 			context.challenge(context.form().setAttribute("realm", context.getRealm()).createForm(TPL_CODE));
 		} catch (Exception e) {
 			context.failureChallenge(AuthenticationFlowError.INTERNAL_ERROR,
-				context.form().setError("smsAuthSmsNotSent", e.getMessage())
+				context.form().setError("smsAuthSmsNotSent", "Error. Use another method.")
 					.createErrorPage(Response.Status.INTERNAL_SERVER_ERROR));
 		}
 	}
