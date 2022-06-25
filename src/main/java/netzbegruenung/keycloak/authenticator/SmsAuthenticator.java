@@ -2,6 +2,7 @@ package netzbegruenung.keycloak.authenticator;
 
 import netzbegruenung.keycloak.authenticator.gateway.SmsServiceFactory;
 import netzbegruenung.keycloak.authenticator.SmsMobileNumberProvider;
+import netzbegruenung.keycloak.authenticator.SmsAuthenticatorModel;
 import org.jboss.logging.Logger;
 import org.keycloak.authentication.CredentialValidator;
 import org.keycloak.authentication.AuthenticationFlowContext;
@@ -19,11 +20,12 @@ import org.keycloak.models.RealmModel;
 import org.keycloak.models.UserModel;
 import org.keycloak.sessions.AuthenticationSessionModel;
 import org.keycloak.theme.Theme;
-import org.json.JSONObject;
+import org.keycloak.util.JsonSerialization;
 
 import javax.ws.rs.core.Response;
 import java.util.Locale;
 import java.util.Optional;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
@@ -43,7 +45,14 @@ public class SmsAuthenticator implements Authenticator, CredentialValidator<SmsM
 		UserModel user = context.getUser();
 
 		Optional<CredentialModel> model = context.getSession().userCredentialManager().getStoredCredentialsByTypeStream(context.getRealm(), user, SmsAuthenticatorModel.TYPE).reduce((first, second) -> first);
-		String mobileNumber = new JSONObject(model.get().getCredentialData()).getString("mobileNumber");
+		String mobileNumber;
+		try {
+			mobileNumber = JsonSerialization.readValue(model.get().getCredentialData(), SmsAuthenticatorModel.class).getCredentialData();
+		} catch (IOException e) {
+			context.failureChallenge(AuthenticationFlowError.INTERNAL_ERROR,
+					context.form().setError("smsAuthSmsNotSent", e.getMessage())
+						.createErrorPage(Response.Status.INTERNAL_SERVER_ERROR));
+		}
 
 		int length = Integer.parseInt(config.getConfig().get("length"));
 		int ttl = Integer.parseInt(config.getConfig().get("ttl"));
