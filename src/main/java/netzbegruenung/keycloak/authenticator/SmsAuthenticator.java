@@ -42,7 +42,7 @@ public class SmsAuthenticator implements Authenticator, CredentialValidator<SmsM
 		UserModel user = context.getUser();
 
 		Optional<CredentialModel> model = context.getSession().userCredentialManager().getStoredCredentialsByTypeStream(context.getRealm(), user, CREDENTIAL_TYPE).reduce((first, second) -> first);;
-		String phoneNumber = model.get().getCredentialData();
+		String mobileNumber = model.get().getCredentialData();
 
 		int length = Integer.parseInt(config.getConfig().get("length"));
 		int ttl = Integer.parseInt(config.getConfig().get("ttl"));
