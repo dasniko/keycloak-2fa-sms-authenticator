@@ -2,9 +2,13 @@ package netzbegruenung.keycloak.authenticator;
 
 import netzbegruenung.keycloak.authenticator.gateway.SmsServiceFactory;
 import netzbegruenung.keycloak.authenticator.SmsMobileNumberProvider;
+import org.jboss.logging.Logger;
+import org.keycloak.authentication.CredentialValidator;
 import org.keycloak.authentication.AuthenticationFlowContext;
 import org.keycloak.authentication.AuthenticationFlowError;
 import org.keycloak.authentication.Authenticator;
+import org.keycloak.authentication.RequiredActionFactory;
+import org.keycloak.authentication.RequiredActionProvider;
 import org.keycloak.common.util.SecretGenerator;
 import org.keycloak.credential.CredentialModel;
 import org.keycloak.credential.CredentialProvider;
@@ -19,14 +23,17 @@ import org.keycloak.theme.Theme;
 import javax.ws.rs.core.Response;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author Netzbegruenung e.V.
  */
-public class SmsAuthenticator implements Authenticator {
+public class SmsAuthenticator implements Authenticator, CredentialValidator<SmsMobileNumberProvider> {
 
 	private static final String TPL_CODE = "login-sms.ftl";
-	private static final String CREDENTIAL_TYPE  = "MOBILE_NUMBER";
+	private static final String CREDENTIAL_TYPE  = "mobile-number";
+	private static final Logger logger = Logger.getLogger(SmsMobileNumberProvider.class);
 
 	@Override
 	public void authenticate(AuthenticationFlowContext context) {
@@ -105,20 +112,24 @@ public class SmsAuthenticator implements Authenticator {
 
 	@Override
 	public boolean configuredFor(KeycloakSession session, RealmModel realm, UserModel user) {
-		SmsMobileNumberProvider smnp = (SmsMobileNumberProvider) session.getProvider(CredentialProvider.class, "MOBILE_NUMBER");
-		return smnp.isConfiguredFor(realm, user, "MOBILE_NUMBER");
+		return getCredentialProvider(session).isConfiguredFor(realm, user, getType(session));
 	}
 
 	@Override
 	public void setRequiredActions(KeycloakSession session, RealmModel realm, UserModel user) {
-		user.addRequiredAction("SET_MOBILE_NUMBER");
+		user.addRequiredAction(SmsAuthenticatorSetMobileNumberAction.PROVIDER_ID);
 	}
+
+	public List<RequiredActionFactory> getRequiredActions(KeycloakSession session) {
+        return Collections.singletonList((SmsAuthenticatorActionFactory)session.getKeycloakSessionFactory().getProviderFactory(RequiredActionProvider.class, SmsAuthenticatorSetMobileNumberAction.PROVIDER_ID));
+    }
 
 	@Override
 	public void close() {
 	}
 
-    public SmsMobileNumberProviderFactory getCredentialProvider(KeycloakSession session) {
-        return (SmsMobileNumberProviderFactory)session.getProvider(CredentialProvider.class, SmsMobileNumberProviderFactory.PROVIDER_ID);
+	@Override
+    public SmsMobileNumberProvider getCredentialProvider(KeycloakSession session) {
+        return (SmsMobileNumberProvider)session.getProvider(CredentialProvider.class, SmsMobileNumberProviderFactory.PROVIDER_ID);
     }
 }

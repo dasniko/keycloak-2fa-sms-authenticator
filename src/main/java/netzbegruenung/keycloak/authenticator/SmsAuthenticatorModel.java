@@ -10,7 +10,7 @@ import org.jboss.logging.Logger;
 import java.io.IOException;
 
 public class SmsAuthenticatorModel extends CredentialModel {
-	public static final String TYPE = "MOBILE_NUMBER";
+	public static final String TYPE = "mobile-number";
 
 	private final SmsAuthenticatorData mobileNumber;
 	private static final Logger LOG = Logger.getLogger(SmsAuthenticatorSetMobileNumberAction.class);

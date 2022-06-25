@@ -119,9 +119,9 @@ public class SmsMobileNumberProvider implements CredentialProvider<SmsAuthentica
         return CredentialTypeMetadata.builder()
                 .type(getType())
                 .category(CredentialTypeMetadata.Category.TWO_FACTOR)
-                .displayName(SmsMobileNumberProviderFactory.PROVIDER_ID)
-                .helpText("secret-question-text")
-                .updateAction(SmsAuthenticatorFactory.PROVIDER_ID)
+                .displayName("smsAuthenticator")
+                .helpText("smsPhoneUpdate")
+                .createAction(SmsAuthenticatorSetMobileNumberAction.PROVIDER_ID)
                 .removeable(true)
                 .build(session);
     }
