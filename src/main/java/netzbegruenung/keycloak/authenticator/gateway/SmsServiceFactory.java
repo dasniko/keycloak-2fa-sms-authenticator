@@ -1,5 +1,6 @@
 package netzbegruenung.keycloak.authenticator.gateway;
 
+import netzbegruenung.keycloak.authenticator.gateway.ApiSmsService;
 import org.jboss.logging.Logger;
 
 import java.util.Map;
@@ -16,8 +17,7 @@ public class SmsServiceFactory {
 			return (phoneNumber, message) ->
 				LOG.warn(String.format("***** SIMULATION MODE ***** Would send SMS to %s with text: %s", phoneNumber, message));
 		} else {
-			return (phoneNumber, message) ->
-				LOG.warn(String.format("***** SIMULATION MODE ***** Would send SMS to %s with text: %s", phoneNumber, message));
+			return new ApiSmsService(config);
 		}
 	}
 
