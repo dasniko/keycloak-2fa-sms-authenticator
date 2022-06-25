@@ -1,7 +1,6 @@
 package netzbegruenung.keycloak.authenticator;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
 
 public class SmsAuthenticatorData {
 

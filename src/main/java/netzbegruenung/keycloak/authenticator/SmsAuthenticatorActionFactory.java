@@ -17,7 +17,6 @@
 
 package netzbegruenung.keycloak.authenticator;
 
-import netzbegruenung.keycloak.authenticator.SmsAuthenticatorSetMobileNumberAction;
 import org.keycloak.Config;
 import org.keycloak.authentication.RequiredActionFactory;
 import org.keycloak.authentication.RequiredActionProvider;

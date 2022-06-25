@@ -19,6 +19,7 @@ import org.keycloak.models.RealmModel;
 import org.keycloak.models.UserModel;
 import org.keycloak.sessions.AuthenticationSessionModel;
 import org.keycloak.theme.Theme;
+import org.json.JSONObject;
 
 import javax.ws.rs.core.Response;
 import java.util.Locale;
@@ -41,8 +42,8 @@ public class SmsAuthenticator implements Authenticator, CredentialValidator<SmsM
 		KeycloakSession session = context.getSession();
 		UserModel user = context.getUser();
 
-		Optional<CredentialModel> model = context.getSession().userCredentialManager().getStoredCredentialsByTypeStream(context.getRealm(), user, CREDENTIAL_TYPE).reduce((first, second) -> first);;
-		String mobileNumber = model.get().getCredentialData();
+		Optional<CredentialModel> model = context.getSession().userCredentialManager().getStoredCredentialsByTypeStream(context.getRealm(), user, SmsAuthenticatorModel.TYPE).reduce((first, second) -> first);
+		String mobileNumber = new JSONObject(model.get().getCredentialData()).getString("mobileNumber");
 
 		int length = Integer.parseInt(config.getConfig().get("length"));
 		int ttl = Integer.parseInt(config.getConfig().get("ttl"));

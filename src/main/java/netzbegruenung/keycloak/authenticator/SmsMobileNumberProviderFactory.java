@@ -16,8 +16,6 @@
  */
 package netzbegruenung.keycloak.authenticator;
 
-import netzbegruenung.keycloak.authenticator.SmsMobileNumberProvider;
-
 import org.keycloak.credential.CredentialProvider;
 import org.keycloak.credential.CredentialProviderFactory;
 import org.keycloak.models.KeycloakSession;

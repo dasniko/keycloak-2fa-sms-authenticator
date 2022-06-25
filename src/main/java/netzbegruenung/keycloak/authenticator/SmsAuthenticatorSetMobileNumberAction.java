@@ -1,16 +1,9 @@
 package netzbegruenung.keycloak.authenticator;
 
-import netzbegruenung.keycloak.authenticator.SmsAuthenticator;
-import netzbegruenung.keycloak.authenticator.SmsAuthenticatorModel;
-import org.keycloak.Config;
 import org.keycloak.authentication.CredentialRegistrator;
-import org.keycloak.authentication.DisplayTypeRequiredActionFactory;
 import org.keycloak.authentication.InitiatedActionSupport;
 import org.keycloak.authentication.RequiredActionContext;
-import org.keycloak.authentication.RequiredActionFactory;
 import org.keycloak.authentication.RequiredActionProvider;
-import org.keycloak.models.KeycloakSession;
-import org.keycloak.models.KeycloakSessionFactory;
 import org.keycloak.models.UserCredentialModel;
 import org.keycloak.credential.CredentialProvider;
 import javax.ws.rs.core.Response;
