@@ -47,12 +47,11 @@ public class ApiSmsService implements SmsService{
 	}
 
 	public void send(String phoneNumber, String message) {
+		LOG.info(String.format("Sending SMS Code to %s", phoneNumber));
 		if (urlencode) {
 			send_urlencoded(phoneNumber, message);
-			LOG.warn(String.format("Trying to send %s to %s via URL encoded request", message, phoneNumber));
 		} else {
 			send_json(phoneNumber, message);
-			LOG.warn(String.format("Trying to send %s to %s via JSON body", message, phoneNumber));
 		}
 	}
 
@@ -75,7 +74,6 @@ public class ApiSmsService implements SmsService{
         HttpResponse<String> response;
 		try {
 			response = client.send(request, HttpResponse.BodyHandlers.ofString());
-			LOG.warn(String.format("Sent message to %s with body %s; Response: %s ", apiurl, sendJson, response));
 		} catch (IOException e) {
 			LOG.warn(String.format("Failed to send message to %s with body %s", apiurl, sendJson));
 			e.printStackTrace();

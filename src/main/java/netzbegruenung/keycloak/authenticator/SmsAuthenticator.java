@@ -47,13 +47,11 @@ public class SmsAuthenticator implements Authenticator, CredentialValidator<SmsM
 		Optional<CredentialModel> model = context.getSession().userCredentialManager().getStoredCredentialsByTypeStream(context.getRealm(), user, SmsAuthenticatorModel.TYPE).reduce((first, second) -> first);
 		String mobileNumber = "";
 		try {
-			String credentialData = JsonSerialization.readValue(model.get().getCredentialData(), SmsAuthenticatorData.class).getMobileNumber();
+			mobileNumber = JsonSerialization.readValue(model.get().getCredentialData(), SmsAuthenticatorData.class).getMobileNumber();
 		} catch (IOException e1) {
-			context.failureChallenge(AuthenticationFlowError.INTERNAL_ERROR,
-					context.form().setError("smsAuthSmsNotSent", "Error. Use another method.")
-						.createErrorPage(Response.Status.INTERNAL_SERVER_ERROR));
+			e1.printStackTrace();
+			return;
 		}
-
 
 		int length = Integer.parseInt(config.getConfig().get("length"));
 		int ttl = Integer.parseInt(config.getConfig().get("ttl"));
