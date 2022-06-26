@@ -13,10 +13,13 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
+ * @author Netzbegruenung e.V.
+ * @author verdigado eG
  */
-package netzbegruenung.keycloak.authenticator;
 
-import netzbegruenung.keycloak.authenticator.SmsAuthenticatorModel;
+package netzbegruenung.keycloak.authenticator;
 
 import org.keycloak.common.util.Time;
 import org.keycloak.credential.CredentialInput;
@@ -33,10 +36,6 @@ import org.keycloak.models.UserCredentialModel;
 import org.keycloak.models.UserModel;
 import java.util.*;
 
-/**
- * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1 $
- */
 public class SmsMobileNumberProvider implements CredentialProvider<SmsAuthenticatorModel>, CredentialInputValidator, CredentialInputUpdater {
 
     protected KeycloakSession session;
