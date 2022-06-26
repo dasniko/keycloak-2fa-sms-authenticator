@@ -22,15 +22,17 @@
 package netzbegruenung.keycloak.authenticator.gateway;
 
 import java.util.Map;
-import java.util.HashMap;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.net.URI;
-import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
+import java.net.http.HttpRequest.Builder;
 import java.net.http.HttpResponse;
 import org.jboss.logging.Logger;
+import java.util.Base64;
+import java.net.URLEncoder;
+import java.nio.charset.Charset;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 public class ApiSmsService implements SmsService{
 
@@ -40,7 +42,8 @@ public class ApiSmsService implements SmsService{
 	private final String apitoken;
 	private final String apiuser;
 
-	private final String from;
+	private final String senderId;
+	private final String countrycode;
 
 	private final String apitokenattribute;
 	private final String messageattribute;
@@ -56,7 +59,8 @@ public class ApiSmsService implements SmsService{
 		apitoken = config.getOrDefault("apitoken", "");
 		apiuser = config.getOrDefault("apiuser", "");
 
-		from = config.get("senderId");
+		countrycode = config.getOrDefault("countrycode", "");
+		senderId = config.get("senderId");
 
 		apitokenattribute = config.getOrDefault("apitokenattribute", "");
 		messageattribute = config.get("messageattribute");
@@ -65,77 +69,78 @@ public class ApiSmsService implements SmsService{
 	}
 
 	public void send(String phoneNumber, String message) {
-		LOG.info(String.format("Sending SMS Code to %s", phoneNumber));
-		if (urlencode) {
-			send_urlencoded(phoneNumber, message);
-		} else {
-			send_json(phoneNumber, message);
+		phoneNumber = clean_phone_number(phoneNumber, countrycode);
+		Builder request_builder;
+		HttpRequest request = null;
+		var client = HttpClient.newHttpClient();
+		try {
+			if (urlencode) {
+				request_builder = urlencoded_request(phoneNumber, message);
+			} else {
+				request_builder = json_request(phoneNumber, message);
+			}
+			if (apiuser != "") {
+				request = request_builder.setHeader("Authorization", get_auth_header(apiuser, apitoken)).build();
+			} else {
+				request = request_builder.build();
+			}
+			HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+			LOG.warn(String.format("API request: %s", response.toString()));
+			if (response.statusCode() == 200) {
+				LOG.warn(String.format("Sent SMS to %s; API response: %s", phoneNumber, response.body()));
+			} else {
+				LOG.warn(String.format("Failed to send message to %s with answer: %s. Validate your config.", phoneNumber, response.body()));
+			}
+		} catch (Exception e){
+			LOG.warn(String.format("Failed to send message to %s with request: %s. Validate your config.", phoneNumber, request.toString()));
+			e.printStackTrace();
+			return;
 		}
 	}
 
-	public void send_json(String phoneNumber, String message) {
+	public Builder json_request(String phoneNumber, String message) {
 		String sendJson = "{"
 			.concat(apitokenattribute != "" ? String.format("\"%s\":\"%s\",", apitokenattribute, apitoken): "")
 			.concat(String.format("\"%s\":\"%s\",", messageattribute, message))
 			.concat(String.format("\"%s\":\"%s\",", receiverattribute, phoneNumber))
-			.concat(String.format("\"%s\":\"%s\"", senderattribute, from))
+			.concat(String.format("\"%s\":\"%s\"", senderattribute, senderId))
 			.concat("}");
 
-		var request = HttpRequest.newBuilder()
+		 return HttpRequest.newBuilder()
 			.uri(URI.create(apiurl))
 			.header("Content-Type", "application/json")
-			.POST(HttpRequest.BodyPublishers.ofString(sendJson))
-			.build();
-
-        var client = HttpClient.newHttpClient();
-
-        HttpResponse<String> response;
-		try {
-			response = client.send(request, HttpResponse.BodyHandlers.ofString());
-		} catch (IOException e) {
-			LOG.warn(String.format("Failed to send message to %s with body %s", apiurl, sendJson));
-			e.printStackTrace();
-		} catch (InterruptedException e) {
-			LOG.warn(String.format("Failed to send message to %s with body %s", apiurl, sendJson));
-			e.printStackTrace();
-		}
+			.POST(HttpRequest.BodyPublishers.ofString(sendJson));
 	}
 
-	public void send_urlencoded(String phoneNumber, String message) {
-		Map<String, String> formData = new HashMap<>();
-		if (apitokenattribute != "") {
-			formData.put(apitokenattribute, apitoken);
-		}
-		formData.put(messageattribute, message);
-		formData.put(receiverattribute, phoneNumber);
-		formData.put(senderattribute, from);
+	public Builder urlencoded_request(String phoneNumber, String message) throws JsonProcessingException {
+		String body = ""
+			.concat(apitokenattribute != "" ? String.format("%s=%s&", apitokenattribute, URLEncoder.encode(apitoken, Charset.defaultCharset())) : "" )
+			.concat(String.format("%s=%s&", messageattribute, URLEncoder.encode(message, Charset.defaultCharset())))
+			.concat(String.format("%s=%s&", receiverattribute, URLEncoder.encode(phoneNumber, Charset.defaultCharset())))
+			.concat(String.format("%s=%s", senderattribute, URLEncoder.encode(senderId, Charset.defaultCharset())));
 
-		var client = HttpClient.newHttpClient();
-		var form_data = getFormDataAsString(formData);
-		var request = HttpRequest.newBuilder(URI.create(apiurl))
-			.POST(HttpRequest.BodyPublishers.ofString(form_data))
-			.build();
-		try {
-			client.send(request, HttpResponse.BodyHandlers.ofString());
-		} catch (IOException e) {
-			LOG.warn(String.format("Failed to send message to %s with params %s", apiurl, form_data));
-			e.printStackTrace();
-		} catch (InterruptedException e) {
-			LOG.warn(String.format("Failed to send message to %s with params %s", apiurl, form_data));
-			e.printStackTrace();
-		}
+		return HttpRequest.newBuilder()
+				.uri(URI.create(apiurl))
+				.header("Content-Type", "application/x-www-form-urlencoded")
+				.POST(HttpRequest.BodyPublishers.ofString(body));
 	}
 
-	private static String getFormDataAsString(Map<String, String> formData) {
-		StringBuilder formBodyBuilder = new StringBuilder();
-		for (Map.Entry<String, String> singleEntry : formData.entrySet()) {
-			if (formBodyBuilder.length() > 0) {
-				formBodyBuilder.append("&");
-			}
-			formBodyBuilder.append(URLEncoder.encode(singleEntry.getKey(), StandardCharsets.UTF_8));
-			formBodyBuilder.append("=");
-			formBodyBuilder.append(URLEncoder.encode(singleEntry.getValue(), StandardCharsets.UTF_8));
+	private static String get_auth_header(String apiuser, String apitoken) {
+		String authString = apiuser + ":" + apitoken;
+		String b64_cred = new String(Base64.getEncoder().encode(authString.getBytes()));
+		return "Basic " + b64_cred;
+	}
+
+	private static String clean_phone_number(String phone_number, String countrycode) {
+		if (countrycode == "") {
+			return phone_number;
 		}
-		return formBodyBuilder.toString();
+		if (phone_number.startsWith("00")) {
+			return phone_number.replaceFirst("00", countrycode);
+		}
+		if (phone_number.startsWith("0")) {
+			return phone_number.replaceFirst("0", countrycode);
+		}
+		return phone_number;
 	}
 }

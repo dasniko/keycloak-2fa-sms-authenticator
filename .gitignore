@@ -4,3 +4,6 @@ config
 target
 copy.sh
 dependency-reduced-pom.xml
+.classpath
+.project
+.settings
