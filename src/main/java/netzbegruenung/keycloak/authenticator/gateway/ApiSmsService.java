@@ -22,16 +22,17 @@
 package netzbegruenung.keycloak.authenticator.gateway;
 
 import java.util.Map;
-import java.util.HashMap;
-import java.nio.charset.StandardCharsets;
 import java.net.URI;
-import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpRequest.Builder;
 import java.net.http.HttpResponse;
 import org.jboss.logging.Logger;
 import java.util.Base64;
+import java.net.URLEncoder;
+import java.nio.charset.Charset;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 public class ApiSmsService implements SmsService{
 
@@ -41,7 +42,7 @@ public class ApiSmsService implements SmsService{
 	private final String apitoken;
 	private final String apiuser;
 
-	private final String from;
+	private final String senderId;
 	private final String countrycode;
 
 	private final String apitokenattribute;
@@ -59,7 +60,7 @@ public class ApiSmsService implements SmsService{
 		apiuser = config.getOrDefault("apiuser", "");
 
 		countrycode = config.getOrDefault("countrycode", "");
-		from = config.get("senderId");
+		senderId = config.get("senderId");
 
 		apitokenattribute = config.getOrDefault("apitokenattribute", "");
 		messageattribute = config.get("messageattribute");
@@ -102,7 +103,7 @@ public class ApiSmsService implements SmsService{
 			.concat(apitokenattribute != "" ? String.format("\"%s\":\"%s\",", apitokenattribute, apitoken): "")
 			.concat(String.format("\"%s\":\"%s\",", messageattribute, message))
 			.concat(String.format("\"%s\":\"%s\",", receiverattribute, phoneNumber))
-			.concat(String.format("\"%s\":\"%s\"", senderattribute, from))
+			.concat(String.format("\"%s\":\"%s\"", senderattribute, senderId))
 			.concat("}");
 
 		 return HttpRequest.newBuilder()
@@ -111,32 +112,17 @@ public class ApiSmsService implements SmsService{
 			.POST(HttpRequest.BodyPublishers.ofString(sendJson));
 	}
 
-	public Builder urlencoded_request(String phoneNumber, String message) {
-		Map<String, String> formData = new HashMap<>();
-		if (apitokenattribute != "") {
-			formData.put(apitokenattribute, apitoken);
-		}
-		formData.put(messageattribute, message);
-		formData.put(receiverattribute, phoneNumber);
-		formData.put(senderattribute, from);
-		String form_data = getFormDataAsString(formData);
+	public Builder urlencoded_request(String phoneNumber, String message) throws JsonProcessingException {
+		String body = ""
+			.concat(apitokenattribute != "" ? String.format("%s=%s&", apitokenattribute, URLEncoder.encode(apitoken, Charset.defaultCharset())) : "" )
+			.concat(String.format("%s=%s&", messageattribute, URLEncoder.encode(message, Charset.defaultCharset())))
+			.concat(String.format("%s=%s&", receiverattribute, URLEncoder.encode(phoneNumber, Charset.defaultCharset())))
+			.concat(String.format("%s=%s", senderattribute, URLEncoder.encode(senderId, Charset.defaultCharset())));
 
 		return HttpRequest.newBuilder()
 				.uri(URI.create(apiurl))
-				.POST(HttpRequest.BodyPublishers.ofString(form_data));
-	}
-
-	private static String getFormDataAsString(Map<String, String> formData) {
-		StringBuilder formBodyBuilder = new StringBuilder();
-		for (Map.Entry<String, String> singleEntry : formData.entrySet()) {
-			if (formBodyBuilder.length() > 0) {
-				formBodyBuilder.append("&");
-			}
-			formBodyBuilder.append(URLEncoder.encode(singleEntry.getKey(), StandardCharsets.UTF_8));
-			formBodyBuilder.append("=");
-			formBodyBuilder.append(URLEncoder.encode(singleEntry.getValue(), StandardCharsets.UTF_8));
-		}
-		return formBodyBuilder.toString();
+				.header("Content-Type", "application/x-www-form-urlencoded")
+				.POST(HttpRequest.BodyPublishers.ofString(body));
 	}
 
 	private static String get_auth_header(String apiuser, String apitoken) {
