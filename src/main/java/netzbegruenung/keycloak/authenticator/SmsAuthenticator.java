@@ -55,7 +55,7 @@ public class SmsAuthenticator implements Authenticator, CredentialValidator<SmsM
 
 	private static final String TPL_CODE = "login-sms.ftl";
 	private static final String CREDENTIAL_TYPE  = "mobile-number";
-	private static final Logger logger = Logger.getLogger(SmsMobileNumberProvider.class);
+	private static final Logger logger = Logger.getLogger(SmsAuthenticator.class);
 
 	@Override
 	public void authenticate(AuthenticationFlowContext context) {

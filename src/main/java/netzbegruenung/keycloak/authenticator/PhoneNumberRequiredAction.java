@@ -25,8 +25,9 @@ import org.keycloak.authentication.CredentialRegistrator;
 import org.keycloak.authentication.InitiatedActionSupport;
 import org.keycloak.authentication.RequiredActionContext;
 import org.keycloak.authentication.RequiredActionProvider;
-import org.keycloak.models.UserCredentialModel;
 import org.keycloak.credential.CredentialProvider;
+import org.keycloak.models.UserCredentialModel;
+import org.keycloak.sessions.AuthenticationSessionModel;
 import javax.ws.rs.core.Response;
 
 import org.jboss.logging.Logger;
@@ -54,16 +55,8 @@ public class PhoneNumberRequiredAction implements RequiredActionProvider, Creden
 	@Override
 	public void processAction(RequiredActionContext context) {
 		String mobileNumber = (context.getHttpRequest().getDecodedFormParameters().getFirst("mobile_number")).replaceAll("[^0-9+]", "");
-		SmsMobileNumberProvider smnp = (SmsMobileNumberProvider) context.getSession().getProvider(CredentialProvider.class, "mobile-number");
-		if (!smnp.isConfiguredFor(context.getRealm(), context.getUser(), SmsAuthenticatorModel.TYPE)) {
-			smnp.createCredential(context.getRealm(), context.getUser(), SmsAuthenticatorModel.createSmsAuthenticator(mobileNumber));
-		} else {
-			smnp.updateCredential(
-				context.getRealm(),
-				context.getUser(),
-				new UserCredentialModel("random_id", "mobile-number", mobileNumber)
-			);
-		}
+		AuthenticationSessionModel authSession = context.getAuthenticationSession();
+		authSession.setAuthNote("mobile_number", mobileNumber);
 		LOG.info(String.format("Process Action completed, mobile number extracted from form: [%s]", mobileNumber));
 		context.getAuthenticationSession().addRequiredAction("phone_validation_config");
 		context.success();
