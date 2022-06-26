@@ -70,12 +70,17 @@ public class ApiSmsService implements SmsService{
 	public void send(String phoneNumber, String message) {
 		phoneNumber = clean_phone_number(phoneNumber, countrycode);
 		Builder request_builder;
-		if (urlencode) {
-			request_builder = urlencoded_request(phoneNumber, message);
-		} else {
-			request_builder = json_request(phoneNumber, message);
+		try {
+			if (urlencode) {
+				request_builder = urlencoded_request(phoneNumber, message);
+			} else {
+				request_builder = json_request(phoneNumber, message);
+			}
+		} catch (Exception e){
+			LOG.warn(String.format("Request builder failed with %s", e.toString()));
+			e.printStackTrace();
+			return;
 		}
-
 		HttpRequest request;
 		if (apiuser != "") {
 			request = request_builder.setHeader("Authorization", get_auth_header(apiuser, apitoken)).build();
@@ -90,6 +95,7 @@ public class ApiSmsService implements SmsService{
 		} catch (Exception e){
 			LOG.warn(String.format("Failed to send message to %s with request %s", apiurl, request.toString()));
 			e.printStackTrace();
+			return;
 		}
 	}
 
@@ -117,9 +123,9 @@ public class ApiSmsService implements SmsService{
 		formData.put(senderattribute, from);
 		String form_data = getFormDataAsString(formData);
 
-		return HttpRequest.newBuilder(URI.create(apiurl))
-				.POST(HttpRequest.BodyPublishers.ofString(form_data))
-				.setHeader("Authorization", get_auth_header(apiuser, apitoken));
+		return HttpRequest.newBuilder()
+				.uri(URI.create(apiurl))
+				.POST(HttpRequest.BodyPublishers.ofString(form_data));
 	}
 
 	private static String getFormDataAsString(Map<String, String> formData) {
