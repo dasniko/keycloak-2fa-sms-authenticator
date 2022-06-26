@@ -16,9 +16,9 @@ public class SmsAuthenticatorSetMobileNumberAction implements RequiredActionProv
 	private static final Logger LOG = Logger.getLogger(SmsAuthenticatorSetMobileNumberAction.class);
 
 	@Override
-    public InitiatedActionSupport initiatedActionSupport() {
-        return InitiatedActionSupport.SUPPORTED;
-    }
+	public InitiatedActionSupport initiatedActionSupport() {
+		return InitiatedActionSupport.SUPPORTED;
+	}
 
 	@Override
 	public void evaluateTriggers(RequiredActionContext requiredActionContext) {}
