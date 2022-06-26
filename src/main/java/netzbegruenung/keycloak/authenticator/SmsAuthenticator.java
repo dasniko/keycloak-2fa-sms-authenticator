@@ -23,9 +23,6 @@
 package netzbegruenung.keycloak.authenticator;
 
 import netzbegruenung.keycloak.authenticator.gateway.SmsServiceFactory;
-import netzbegruenung.keycloak.authenticator.SmsMobileNumberProvider;
-import netzbegruenung.keycloak.authenticator.SmsAuthenticatorModel;
-import org.jboss.logging.Logger;
 import org.keycloak.authentication.CredentialValidator;
 import org.keycloak.authentication.AuthenticationFlowContext;
 import org.keycloak.authentication.AuthenticationFlowError;
@@ -55,7 +52,6 @@ public class SmsAuthenticator implements Authenticator, CredentialValidator<SmsM
 
 	private static final String TPL_CODE = "login-sms.ftl";
 	private static final String CREDENTIAL_TYPE  = "mobile-number";
-	private static final Logger logger = Logger.getLogger(SmsAuthenticator.class);
 
 	@Override
 	public void authenticate(AuthenticationFlowContext context) {
@@ -149,15 +145,15 @@ public class SmsAuthenticator implements Authenticator, CredentialValidator<SmsM
 	}
 
 	public List<RequiredActionFactory> getRequiredActions(KeycloakSession session) {
-        return Collections.singletonList((PhoneNumberRequiredActionFactory)session.getKeycloakSessionFactory().getProviderFactory(RequiredActionProvider.class, PhoneNumberRequiredAction.PROVIDER_ID));
-    }
+		return Collections.singletonList((PhoneNumberRequiredActionFactory)session.getKeycloakSessionFactory().getProviderFactory(RequiredActionProvider.class, PhoneNumberRequiredAction.PROVIDER_ID));
+	}
 
 	@Override
 	public void close() {
 	}
 
 	@Override
-    public SmsMobileNumberProvider getCredentialProvider(KeycloakSession session) {
-        return (SmsMobileNumberProvider)session.getProvider(CredentialProvider.class, SmsMobileNumberProviderFactory.PROVIDER_ID);
-    }
+	public SmsMobileNumberProvider getCredentialProvider(KeycloakSession session) {
+		return (SmsMobileNumberProvider)session.getProvider(CredentialProvider.class, SmsMobileNumberProviderFactory.PROVIDER_ID);
+	}
 }

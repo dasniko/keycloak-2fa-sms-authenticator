@@ -40,7 +40,6 @@ public class PhoneNumberRequiredActionFactory implements RequiredActionFactory {
         return SINGLETON;
     }
 
-
     @Override
     public String getId() {
         return PhoneNumberRequiredAction.PROVIDER_ID;

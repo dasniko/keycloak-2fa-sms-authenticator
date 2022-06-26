@@ -44,9 +44,9 @@ public class SmsAuthenticatorFactory implements AuthenticatorFactory {
 	}
 
 	@Override
-    public Authenticator create(KeycloakSession session) {
-        return SINGLETON;
-    }
+	public Authenticator create(KeycloakSession session) {
+		return SINGLETON;
+	}
 
 	private static AuthenticationExecutionModel.Requirement[] REQUIREMENT_CHOICES = {
 		AuthenticationExecutionModel.Requirement.REQUIRED,

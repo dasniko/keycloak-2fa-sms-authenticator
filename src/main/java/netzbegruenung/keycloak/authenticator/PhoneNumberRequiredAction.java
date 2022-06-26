@@ -25,8 +25,6 @@ import org.keycloak.authentication.CredentialRegistrator;
 import org.keycloak.authentication.InitiatedActionSupport;
 import org.keycloak.authentication.RequiredActionContext;
 import org.keycloak.authentication.RequiredActionProvider;
-import org.keycloak.credential.CredentialProvider;
-import org.keycloak.models.UserCredentialModel;
 import org.keycloak.sessions.AuthenticationSessionModel;
 import javax.ws.rs.core.Response;
 
@@ -38,9 +36,9 @@ public class PhoneNumberRequiredAction implements RequiredActionProvider, Creden
 	private static final Logger LOG = Logger.getLogger(PhoneNumberRequiredAction.class);
 
 	@Override
-    public InitiatedActionSupport initiatedActionSupport() {
-        return InitiatedActionSupport.SUPPORTED;
-    }
+	public InitiatedActionSupport initiatedActionSupport() {
+		return InitiatedActionSupport.SUPPORTED;
+	}
 
 	@Override
 	public void evaluateTriggers(RequiredActionContext requiredActionContext) {}
@@ -58,7 +56,7 @@ public class PhoneNumberRequiredAction implements RequiredActionProvider, Creden
 		AuthenticationSessionModel authSession = context.getAuthenticationSession();
 		authSession.setAuthNote("mobile_number", mobileNumber);
 		LOG.info(String.format("Process Action completed, mobile number extracted from form: [%s]", mobileNumber));
-		context.getAuthenticationSession().addRequiredAction("phone_validation_config");
+		context.getAuthenticationSession().addRequiredAction(PhoneValidationRequiredAction.PROVIDER_ID);
 		context.success();
 	}
 
