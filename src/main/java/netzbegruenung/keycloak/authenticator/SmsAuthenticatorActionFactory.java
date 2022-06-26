@@ -13,7 +13,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
+ * @author Netzbegruenung e.V.
  */
+
 
 package netzbegruenung.keycloak.authenticator;
 
@@ -23,10 +27,6 @@ import org.keycloak.authentication.RequiredActionProvider;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.KeycloakSessionFactory;
 
-/**
- * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1 $
- */
 public class SmsAuthenticatorActionFactory implements RequiredActionFactory {
 
     private static final SmsAuthenticatorSetMobileNumberAction SINGLETON = new SmsAuthenticatorSetMobileNumberAction();

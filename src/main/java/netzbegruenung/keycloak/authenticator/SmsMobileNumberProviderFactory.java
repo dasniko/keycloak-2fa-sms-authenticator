@@ -13,17 +13,19 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * @author Bill Burke
+ * @author Netzbegruenung e.V.
+ * @author verdigado eG
  */
+
 package netzbegruenung.keycloak.authenticator;
 
 import org.keycloak.credential.CredentialProvider;
 import org.keycloak.credential.CredentialProviderFactory;
 import org.keycloak.models.KeycloakSession;
 
-/**
- * @author Bill Burke
- * @version $Revision: 1 $
- */
+
 public class SmsMobileNumberProviderFactory implements CredentialProviderFactory<SmsMobileNumberProvider> {
 
     public static final String PROVIDER_ID =  "mobile-number";
