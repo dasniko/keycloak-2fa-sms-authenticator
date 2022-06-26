@@ -141,6 +141,9 @@ public class ApiSmsService implements SmsService{
 	}
 
 	private static String clean_phone_number(String phone_number, String countrycode) {
+		if (countrycode == "") {
+			return phone_number;
+		}
 		if (phone_number.startsWith("00")) {
 			return phone_number.replaceFirst("00", countrycode);
 		}
