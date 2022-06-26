@@ -31,7 +31,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpRequest.Builder;
 import java.net.http.HttpResponse;
 import org.jboss.logging.Logger;
-import org.apache.commons.codec.binary.Base64;
+import java.util.Base64;
 
 public class ApiSmsService implements SmsService{
 
@@ -84,9 +84,14 @@ public class ApiSmsService implements SmsService{
 				request = request_builder.build();
 			}
 			HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-			LOG.warn(String.format("Sent SMS to %s; API response: %s", phoneNumber, response.toString()));
+			LOG.warn(String.format("API request: %s", response.toString()));
+			if (response.statusCode() == 200) {
+				LOG.warn(String.format("Sent SMS to %s; API response: %s", phoneNumber, response.body()));
+			} else {
+				LOG.warn(String.format("Failed to send message to %s with answer: %s. Validate your config.", phoneNumber, response.body()));
+			}
 		} catch (Exception e){
-			LOG.warn(String.format("Failed to send message to %s with request: %s", phoneNumber, request.toString()));
+			LOG.warn(String.format("Failed to send message to %s with request: %s. Validate your config.", phoneNumber, request.toString()));
 			e.printStackTrace();
 			return;
 		}
@@ -136,7 +141,8 @@ public class ApiSmsService implements SmsService{
 
 	private static String get_auth_header(String apiuser, String apitoken) {
 		String authString = apiuser + ":" + apitoken;
-		return String.format("Basic %s" + new String(Base64.encodeBase64(authString.getBytes())));
+		String b64_cred = new String(Base64.getEncoder().encode(authString.getBytes()));
+		return "Basic " + b64_cred;
 	}
 
 	private static String clean_phone_number(String phone_number, String countrycode) {
