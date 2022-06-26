@@ -70,30 +70,23 @@ public class ApiSmsService implements SmsService{
 	public void send(String phoneNumber, String message) {
 		phoneNumber = clean_phone_number(phoneNumber, countrycode);
 		Builder request_builder;
+		HttpRequest request = null;
+		var client = HttpClient.newHttpClient();
 		try {
 			if (urlencode) {
 				request_builder = urlencoded_request(phoneNumber, message);
 			} else {
 				request_builder = json_request(phoneNumber, message);
 			}
-		} catch (Exception e){
-			LOG.warn(String.format("Request builder failed with %s", e.toString()));
-			e.printStackTrace();
-			return;
-		}
-		HttpRequest request;
-		if (apiuser != "") {
-			request = request_builder.setHeader("Authorization", get_auth_header(apiuser, apitoken)).build();
-		} else {
-			request = request_builder.build();
-		}
-
-		var client = HttpClient.newHttpClient();
-		try {
+			if (apiuser != "") {
+				request = request_builder.setHeader("Authorization", get_auth_header(apiuser, apitoken)).build();
+			} else {
+				request = request_builder.build();
+			}
 			HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 			LOG.warn(String.format("Sent SMS to %s; API response: %s", phoneNumber, response.toString()));
 		} catch (Exception e){
-			LOG.warn(String.format("Failed to send message to %s with request %s", apiurl, request.toString()));
+			LOG.warn(String.format("Failed to send message to %s with request: %s", phoneNumber, request.toString()));
 			e.printStackTrace();
 			return;
 		}
