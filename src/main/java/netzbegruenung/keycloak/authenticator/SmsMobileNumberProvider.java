@@ -114,7 +114,7 @@ public class SmsMobileNumberProvider implements CredentialProvider<SmsAuthentica
                 .category(CredentialTypeMetadata.Category.TWO_FACTOR)
                 .displayName("smsAuthenticator")
                 .helpText("smsPhoneUpdate")
-                .createAction(SmsAuthenticatorSetMobileNumberAction.PROVIDER_ID)
+                .createAction(PhoneNumberRequiredAction.PROVIDER_ID)
                 .removeable(true)
                 .build(session);
     }

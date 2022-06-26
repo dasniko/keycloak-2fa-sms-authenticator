@@ -145,12 +145,12 @@ public class SmsAuthenticator implements Authenticator, CredentialValidator<SmsM
 
 	@Override
 	public void setRequiredActions(KeycloakSession session, RealmModel realm, UserModel user) {
-		user.addRequiredAction(SmsAuthenticatorSetMobileNumberAction.PROVIDER_ID);
+		user.addRequiredAction(PhoneNumberRequiredAction.PROVIDER_ID);
 	}
 
 	public List<RequiredActionFactory> getRequiredActions(KeycloakSession session) {
-		return Collections.singletonList((SmsAuthenticatorActionFactory)session.getKeycloakSessionFactory().getProviderFactory(RequiredActionProvider.class, SmsAuthenticatorSetMobileNumberAction.PROVIDER_ID));
-	}
+        return Collections.singletonList((PhoneNumberRequiredActionFactory)session.getKeycloakSessionFactory().getProviderFactory(RequiredActionProvider.class, PhoneNumberRequiredAction.PROVIDER_ID));
+    }
 
 	@Override
 	public void close() {
