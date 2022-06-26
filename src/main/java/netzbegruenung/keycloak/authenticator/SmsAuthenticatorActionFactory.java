@@ -16,6 +16,7 @@
  *
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author Netzbegruenung e.V.
+ * @author verdigado eG
  */
 
 
