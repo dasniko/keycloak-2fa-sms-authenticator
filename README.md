@@ -6,3 +6,26 @@ This is a fork of a great demo implementation by [@dasniko](https://github.com/d
 
 # License
 The code of this project is Apache 2.0 licensed. Parts of the original code are MIT licensed.
+
+# Building & Installing
+
+1. Clone this repository
+1. Install Apache Maven
+1. Change into the cloned directory and run
+   ```shell
+   mvn package
+   ```
+1. Copy the created jar file into the `providers` directory of your Keycloak:
+   ```shell
+   cp target/netzbegruenung.keycloak-2fa-sms-authenticator.jar /path/to/keycloak/providers
+   ```
+1. Run the `build` command and restart Keycloak:
+   ```shell
+   /path/to/keycloak/bin/kc.sh build [your-additional-flags]
+   systemctl restart keycloak.service
+   ```
+
+# Usage
+1. Add a new execution to the 2FA flow of your Browser flow, choose "SMS Authentication (2FA)".
+1. Make sure that you name it "sms-2fa". This is currently a hack that will hopefully be fixed. Additional executions with other names can be added. But this first execution will be used for the confirmation SMS when setting up a new phone number.
+1. Go into the config of the execution and configure the plugin so that it works with the API of your SMS proivder.
