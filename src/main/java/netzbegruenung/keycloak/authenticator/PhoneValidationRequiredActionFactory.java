@@ -15,10 +15,10 @@
  * limitations under the License.
  *
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
+ * @author Niko Köbler, https://www.n-k.de, @dasniko
  * @author Netzbegruenung e.V.
  * @author verdigado eG
  */
-
 
 package netzbegruenung.keycloak.authenticator;
 
@@ -28,9 +28,9 @@ import org.keycloak.authentication.RequiredActionProvider;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.KeycloakSessionFactory;
 
-public class SmsAuthenticatorActionFactory implements RequiredActionFactory {
+public class PhoneValidationRequiredActionFactory implements RequiredActionFactory {
 
-    private static final SmsAuthenticatorSetMobileNumberAction SINGLETON = new SmsAuthenticatorSetMobileNumberAction();
+    private static final PhoneValidationRequiredAction SINGLETON = new PhoneValidationRequiredAction();
 
     @Override
     public RequiredActionProvider create(KeycloakSession session) {
@@ -40,12 +40,12 @@ public class SmsAuthenticatorActionFactory implements RequiredActionFactory {
 
     @Override
     public String getId() {
-        return SmsAuthenticatorSetMobileNumberAction.PROVIDER_ID;
+        return PhoneValidationRequiredAction.PROVIDER_ID;
     }
 
     @Override
     public String getDisplayText() {
-        return "Update Mobile Number";
+        return "Phone Validation";
     }
 
     @Override
