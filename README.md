@@ -7,7 +7,7 @@ This is a fork of a great demo implementation by [@dasniko](https://github.com/d
 # License
 The code of this project is Apache 2.0 licensed. Parts of the original code are MIT licensed.
 
-# Building & Installing
+# Building
 
 1. Clone this repository
 1. Install Apache Maven
@@ -15,9 +15,14 @@ The code of this project is Apache 2.0 licensed. Parts of the original code are 
    ```shell
    mvn package
    ```
+   A file `target/netzbegruenung.keycloak-2fa-sms-authenticator.jar` should be created.
+
+# Installing
+1. Go to https://github.com/netzbegruenung/keycloak-2fa-sms-authenticator/releases and download
+   the latest .jar file.
 1. Copy the created jar file into the `providers` directory of your Keycloak:
    ```shell
-   cp target/netzbegruenung.keycloak-2fa-sms-authenticator.jar /path/to/keycloak/providers
+   cp netzbegruenung.keycloak-2fa-sms-authenticator.jar /path/to/keycloak/providers
    ```
 1. Run the `build` command and restart Keycloak:
    ```shell
