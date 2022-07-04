@@ -25,6 +25,17 @@ jobs:
       - name: Build with Maven
         run: mvn -B package --file pom.xml
       - run: mkdir staging && cp target/*.jar staging
+      - name: Create hash files
+        run: |
+          cd staging
+          for jar in *.jar
+          do
+              md5sum $jar | awk '{ print $1 }' > "${jar}.md5"
+              sha1sum $jar | awk '{ print $1 }' > "${jar}.sha1"
+              sha256sum $jar | awk '{ print $1 }' > "${jar}.sha256"
+              sha512sum $jar | awk '{ print $1 }' > "${jar}.sha512"
+          done
+          cd ..
       - uses: actions/upload-artifact@v3
         with:
           name: Package
@@ -34,4 +45,4 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           prerelease: false
           files: |
-            staging/*.jar
+            staging/*
