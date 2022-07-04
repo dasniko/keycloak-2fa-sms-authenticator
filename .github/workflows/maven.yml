@@ -1,5 +1,6 @@
 # This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
 # For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
+# https://github.com/actions/create-release
 
 name: Java CI with Maven
 
@@ -8,7 +9,8 @@ on:
     tags:
       - v**
 jobs:
-  upload-package:
+  create-release:
+    name: "Create Release"
 
     runs-on: ubuntu-latest
 
@@ -27,3 +29,9 @@ jobs:
         with:
           name: Package
           path: staging
+      - uses: marvinpinto/action-automatic-releases@latest
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          prerelease: false
+          files: |
+            staging/*.jar
