@@ -30,6 +30,7 @@ public class SmsAuthenticator implements Authenticator {
 		UserModel user = context.getUser();
 
 		String mobileNumber = user.getFirstAttribute("mobile_number");
+		String telnyxNumber = "+14633367072";
 		// mobileNumber of course has to be further validated on proper format, country code, ...
 
 		int length = Integer.parseInt(config.getConfig().get("length"));
@@ -46,12 +47,13 @@ public class SmsAuthenticator implements Authenticator {
 			String smsAuthText = theme.getMessages(locale).getProperty("smsAuthText");
 			String smsText = String.format(smsAuthText, code, Math.floorDiv(ttl, 60));
 
-			SmsServiceFactory.get(config.getConfig()).send(mobileNumber, smsText);
+			SmsServiceFactory.get(config.getConfig()).send(telnyxNumber, mobileNumber, smsText);
 
 			context.challenge(context.form().setAttribute("realm", context.getRealm()).createForm(TPL_CODE));
 		} catch (Exception e) {
 			context.failureChallenge(AuthenticationFlowError.INTERNAL_ERROR,
-				context.form().setError("smsAuthSmsNotSent", e.getMessage())
+				context.form().setError("" +
+						"", e.getMessage())
 					.createErrorPage(Response.Status.INTERNAL_SERVER_ERROR));
 		}
 	}

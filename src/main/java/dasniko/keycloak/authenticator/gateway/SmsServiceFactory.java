@@ -13,10 +13,10 @@ public class SmsServiceFactory {
 
 	public static SmsService get(Map<String, String> config) {
 		if (Boolean.parseBoolean(config.getOrDefault("simulation", "false"))) {
-			return (phoneNumber, message) ->
+			return (telnyxNumber, phoneNumber, message) ->
 				LOG.warn(String.format("***** SIMULATION MODE ***** Would send SMS to %s with text: %s", phoneNumber, message));
 		} else {
-			return new AwsSmsService(config);
+			return new TelnyxSmsService();
 		}
 	}
 

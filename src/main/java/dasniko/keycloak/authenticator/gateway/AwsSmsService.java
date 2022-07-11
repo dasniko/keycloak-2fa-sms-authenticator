@@ -20,7 +20,7 @@ public class AwsSmsService implements SmsService {
 	}
 
 	@Override
-	public void send(String phoneNumber, String message) {
+	public void send(String telnyxNumber, String phoneNumber, String message) {
 		Map<String, MessageAttributeValue> messageAttributes = new HashMap<>();
 		messageAttributes.put("AWS.SNS.SMS.SenderID",
 			MessageAttributeValue.builder().stringValue(senderId).dataType("String").build());

@@ -7,6 +7,6 @@ import java.util.Map;
  */
 public interface SmsService {
 
-	void send(String phoneNumber, String message);
+	void send(String telnyxNumber, String phoneNumber, String message);
 
 }
