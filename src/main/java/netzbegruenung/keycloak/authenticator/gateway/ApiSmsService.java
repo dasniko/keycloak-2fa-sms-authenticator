@@ -136,7 +136,7 @@ public class ApiSmsService implements SmsService{
 			return phone_number;
 		}
 		if (phone_number.startsWith("00")) {
-			return phone_number.replaceFirst("00", countrycode);
+			return phone_number.replaceFirst("00", "+");
 		}
 		if (phone_number.startsWith("0")) {
 			return phone_number.replaceFirst("0", countrycode);
