@@ -21,7 +21,6 @@
 
 package netzbegruenung.keycloak.authenticator;
 
-import netzbegruenung.keycloak.authenticator.SmsAuthenticatorModel;
 import org.keycloak.common.util.Time;
 import org.keycloak.credential.CredentialModel;
 import org.keycloak.util.JsonSerialization;
@@ -46,13 +45,17 @@ public class SmsAuthenticatorModel extends CredentialModel {
 		try {
 			SmsAuthenticatorData credentialData = JsonSerialization.readValue(credentialModel.getCredentialData(), SmsAuthenticatorData.class);
 
-			SmsAuthenticatorModel SmsAuthenticatorModel = new SmsAuthenticatorModel(credentialData);
-			SmsAuthenticatorModel.setUserLabel("Mobile Number");
-			SmsAuthenticatorModel.setCreatedDate(credentialModel.getCreatedDate());
-			SmsAuthenticatorModel.setType(TYPE);
-			SmsAuthenticatorModel.setId(credentialModel.getId());
-			SmsAuthenticatorModel.setCredentialData(credentialModel.getCredentialData());
-			return SmsAuthenticatorModel;
+			SmsAuthenticatorModel smsAuthenticatorModel = new SmsAuthenticatorModel(credentialData);
+			smsAuthenticatorModel.setUserLabel(
+					"Mobile Number: ***" + credentialData.getMobileNumber().substring(
+							Math.max(credentialData.getMobileNumber().length() - 3, 0)
+					)
+			);
+			smsAuthenticatorModel.setCreatedDate(credentialModel.getCreatedDate());
+			smsAuthenticatorModel.setType(TYPE);
+			smsAuthenticatorModel.setId(credentialModel.getId());
+			smsAuthenticatorModel.setCredentialData(credentialModel.getCredentialData());
+			return smsAuthenticatorModel;
 		} catch (IOException e){
 			throw new RuntimeException(e);
 		}
