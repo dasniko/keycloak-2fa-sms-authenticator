@@ -132,14 +132,26 @@ public class ApiSmsService implements SmsService{
 	}
 
 	private static String clean_phone_number(String phone_number, String countrycode) {
+		/*
+		 * This function tries to correct several common user errors. If there is no default country
+		 * prefix, this function does not dare to touch the phone number.
+		 * https://en.wikipedia.org/wiki/List_of_mobile_telephone_prefixes_by_country
+		 */
 		if (countrycode == "") {
 			return phone_number;
 		}
-		if (phone_number.startsWith("00")) {
-			return phone_number.replaceFirst("00", "+");
+		String country_number = countrycode.replaceFirst("+", "");
+		// convert 49 to +49
+		if (phone_number.startsWith(country_number)) {
+			phone_number = phone_number.replaceFirst(country_number, countrycode);
 		}
-		if (phone_number.startsWith("0")) {
-			return phone_number.replaceFirst("0", countrycode);
+		// convert 0049 to +49
+		if (phone_number.startsWith("00"+country_number)) {
+			phone_number = phone_number.replaceFirst("00"+country_number, countrycode);
+		}
+		// convert +490176 to +49176
+		if (phone_number.startsWith(countrycode+"0")) {
+			phone_number = phone_number.replaceFirst(countrycode+"0", countrycode);
 		}
 		return phone_number;
 	}

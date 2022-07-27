@@ -25,6 +25,6 @@
 			</div>
 		</form>
 	<#elseif section = "info" >
-		${msg("smsPhoneNumberInstruction")}
+		${msg("smsPhoneNumberInstructions")}
 	</#if>
 </@layout.registrationLayout>
