@@ -40,7 +40,7 @@ import java.util.Locale;
 import javax.ws.rs.core.Response;
 
 public class PhoneValidationRequiredAction implements RequiredActionProvider, CredentialRegistrator {
-	private static final Logger LOG = Logger.getLogger(PhoneValidationRequiredAction.class);
+	private static final Logger logger = Logger.getLogger(PhoneValidationRequiredAction.class);
 	public static final String PROVIDER_ID = "phone_validation_config";
 
 	@Override
@@ -58,7 +58,7 @@ public class PhoneValidationRequiredAction implements RequiredActionProvider, Cr
 			AuthenticatorConfigModel config = context.getRealm().getAuthenticatorConfigByAlias("sms-2fa");
 
 			String mobileNumber = authSession.getAuthNote("mobile_number");
-			LOG.info(String.format("%s", mobileNumber));
+			logger.infof("Validating phone number: %s of user: %s", mobileNumber, user.getUsername());
 
 			int length = Integer.parseInt(config.getConfig().get("length"));
 			int ttl = Integer.parseInt(config.getConfig().get("ttl"));
@@ -95,7 +95,7 @@ public class PhoneValidationRequiredAction implements RequiredActionProvider, Cr
 		String ttl = authSession.getAuthNote("ttl");
 
 		if (code == null || ttl == null || enteredCode == null) {
-			LOG.warn("Phone number is not set");
+			logger.warn("Phone number is not set");
 			handleInvalidSmsCode(context);
 			return;
 		}

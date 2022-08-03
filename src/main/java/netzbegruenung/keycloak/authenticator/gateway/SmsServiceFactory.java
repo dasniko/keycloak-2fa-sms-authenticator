@@ -27,12 +27,12 @@ import java.util.Map;
 
 public class SmsServiceFactory {
 
-	private static final Logger LOG = Logger.getLogger(SmsServiceFactory.class);
+	private static final Logger logger = Logger.getLogger(SmsServiceFactory.class);
 
 	public static SmsService get(Map<String, String> config) {
 		if (Boolean.parseBoolean(config.getOrDefault("simulation", "false"))) {
 			return (phoneNumber, message) ->
-				LOG.warn(String.format("***** SIMULATION MODE ***** Would send SMS to %s with text: %s", phoneNumber, message));
+				logger.infof("***** SIMULATION MODE ***** Would send SMS to %s with text: %s", phoneNumber, message);
 		} else {
 			return new ApiSmsService(config);
 		}
