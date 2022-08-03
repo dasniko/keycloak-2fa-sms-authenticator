@@ -25,15 +25,15 @@ import org.keycloak.authentication.CredentialRegistrator;
 import org.keycloak.authentication.InitiatedActionSupport;
 import org.keycloak.authentication.RequiredActionContext;
 import org.keycloak.authentication.RequiredActionProvider;
+import org.keycloak.authentication.requiredactions.WebAuthnRegisterFactory;
 import org.keycloak.credential.CredentialModel;
 import org.keycloak.models.AuthenticatorConfigModel;
+import org.keycloak.models.UserModel;
 import org.keycloak.models.credential.OTPCredentialModel;
 import org.keycloak.models.credential.WebAuthnCredentialModel;
 import org.keycloak.sessions.AuthenticationSessionModel;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -69,17 +69,25 @@ public class PhoneNumberRequiredAction implements RequiredActionProvider, Creden
 			List<CredentialModel> credentialList = credentials
 				.filter(c -> secondFactors.contains(c.getType()))
 				.collect(Collectors.toList());
-			Set<String> requiredActions = context.getAuthenticationSession().getRequiredActions();
+			Stream<String> usersRequiredActions = context.getUser().getRequiredActionsStream();
+			// merge required actions of current authentication session
+			Stream<String> allRequiredActions = Stream.concat(
+				usersRequiredActions,
+				context.getAuthenticationSession().getRequiredActions().stream()
+			);
+			Set<String> availableRequiredActions = Set.of(
+				PhoneNumberRequiredAction.PROVIDER_ID,
+				PhoneValidationRequiredAction.PROVIDER_ID,
+				UserModel.RequiredAction.CONFIGURE_TOTP.name(),
+				WebAuthnRegisterFactory.PROVIDER_ID
+			);
 			if (
 				credentialList.isEmpty()
-				&& !requiredActions.contains(PhoneNumberRequiredAction.PROVIDER_ID)
-				&& !requiredActions.contains(PhoneValidationRequiredAction.PROVIDER_ID)
+				&& !allRequiredActions.anyMatch(x -> availableRequiredActions.contains(x))
 			) {
-				logger.info(
-					String.format(
-						"No 2FA method configured for user: %s, setting required action for SMS authenticator",
-						context.getUser().getUsername()
-					)
+				logger.infof(
+					"No 2FA method configured for user: %s, setting required action for SMS authenticator",
+					context.getUser().getUsername()
 				);
 				context.getUser().addRequiredAction(PhoneNumberRequiredAction.PROVIDER_ID);
 			}
@@ -97,7 +105,7 @@ public class PhoneNumberRequiredAction implements RequiredActionProvider, Creden
 		String mobileNumber = (context.getHttpRequest().getDecodedFormParameters().getFirst("mobile_number")).replaceAll("[^0-9+]", "");
 		AuthenticationSessionModel authSession = context.getAuthenticationSession();
 		authSession.setAuthNote("mobile_number", mobileNumber);
-		logger.debug(String.format("Add required action for phone validation: [%s]", mobileNumber));
+		logger.infof("Add required action for phone validation: [%s], user: %s", mobileNumber, context.getUser().getUsername());
 		context.getAuthenticationSession().addRequiredAction(PhoneValidationRequiredAction.PROVIDER_ID);
 		context.success();
 	}

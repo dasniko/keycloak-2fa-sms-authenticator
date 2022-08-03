@@ -50,7 +50,7 @@ public class ApiSmsService implements SmsService{
 	private final String receiverattribute;
 	private final String senderattribute;
 
-	private static final Logger LOG = Logger.getLogger(SmsServiceFactory.class);
+	private static final Logger logger = Logger.getLogger(SmsServiceFactory.class);
 
 	ApiSmsService(Map<String, String> config) {
 		apiurl = config.get("apiurl");
@@ -85,14 +85,14 @@ public class ApiSmsService implements SmsService{
 				request = request_builder.build();
 			}
 			HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-			LOG.warn(String.format("API request: %s", response.toString()));
+			logger.infof("API request: %s", response.toString());
 			if (response.statusCode() == 200) {
-				LOG.warn(String.format("Sent SMS to %s; API response: %s", phoneNumber, response.body()));
+				logger.infof("Sent SMS to %s; API response: %s", phoneNumber, response.body());
 			} else {
-				LOG.warn(String.format("Failed to send message to %s with answer: %s. Validate your config.", phoneNumber, response.body()));
+				logger.errorf("Failed to send message to %s with answer: %s. Validate your config.", phoneNumber, response.body());
 			}
 		} catch (Exception e){
-			LOG.warn(String.format("Failed to send message to %s with request: %s. Validate your config.", phoneNumber, request.toString()));
+			logger.errorf("Failed to send message to %s with request: %s. Validate your config.", phoneNumber, request.toString());
 			e.printStackTrace();
 			return;
 		}
