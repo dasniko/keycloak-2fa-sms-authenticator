@@ -140,7 +140,7 @@ public class ApiSmsService implements SmsService{
 		if (countrycode == "") {
 			return phone_number;
 		}
-		String country_number = countrycode.replaceFirst("+", "");
+		String country_number = countrycode.replaceFirst("\\+", "");
 		// convert 49 to +49
 		if (phone_number.startsWith(country_number)) {
 			phone_number = phone_number.replaceFirst(country_number, countrycode);
