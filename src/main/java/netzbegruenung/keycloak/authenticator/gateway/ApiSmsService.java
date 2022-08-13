@@ -138,24 +138,29 @@ public class ApiSmsService implements SmsService{
 		 * https://en.wikipedia.org/wiki/List_of_mobile_telephone_prefixes_by_country
 		 */
 		if (countrycode == "") {
+			logger.infof("Clean phone number: no country code set, return %s", phone_number);
 			return phone_number;
 		}
 		String country_number = countrycode.replaceFirst("\\+", "");
 		// convert 49 to +49
 		if (phone_number.startsWith(country_number)) {
 			phone_number = phone_number.replaceFirst(country_number, countrycode);
+			logger.infof("Clean phone number: convert 49 to +49, set phone number to %s", phone_number);
 		}
 		// convert 0049 to +49
 		if (phone_number.startsWith("00"+country_number)) {
 			phone_number = phone_number.replaceFirst("00"+country_number, countrycode);
+			logger.infof("Clean phone number: convert 0049 to +49, set phone number to %s", phone_number);
 		}
 		// convert +490176 to +49176
 		if (phone_number.startsWith(countrycode+"0")) {
 			phone_number = phone_number.replaceFirst(countrycode+"0", countrycode);
+			logger.infof("Clean phone number: convert +490176 to +49176, set phone number to %s", phone_number);
 		}
 		// convert 0 to +49
 		if (phone_number.startsWith("0")) {
-			phone_number.replaceFirst("0", countrycode);
+			phone_number = phone_number.replaceFirst("0", countrycode);
+			logger.infof("Clean phone number: convert 0 to +49, set phone number to %s", phone_number);
 		}
 		return phone_number;
 	}
