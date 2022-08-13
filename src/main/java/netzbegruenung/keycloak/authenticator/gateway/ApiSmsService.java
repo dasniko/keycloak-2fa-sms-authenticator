@@ -153,6 +153,10 @@ public class ApiSmsService implements SmsService{
 		if (phone_number.startsWith(countrycode+"0")) {
 			phone_number = phone_number.replaceFirst(countrycode+"0", countrycode);
 		}
+		// convert 0 to +49
+		if (phone_number.startsWith("0")) {
+			phone_number.replaceFirst("0", countrycode);
+		}
 		return phone_number;
 	}
 }
