@@ -72,9 +72,9 @@ public class PhoneNumberRequiredAction implements RequiredActionProvider, Creden
 			}
 
 			Stream<CredentialModel> credentials = context
-				.getSession()
-				.userCredentialManager()
-				.getStoredCredentialsStream(context.getRealm(), context.getUser());
+				.getUser()
+				.credentialManager()
+				.getStoredCredentialsStream();
 			// list of accepted 2FA alternatives
 			List<String> secondFactors = Arrays.asList(
 				SmsAuthenticatorModel.TYPE,
