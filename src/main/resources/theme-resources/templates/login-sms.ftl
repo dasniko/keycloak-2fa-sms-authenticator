@@ -3,7 +3,7 @@
 	<#if section = "header">
 		${msg("smsAuthTitle",realm.displayName)}
 	<#elseif section = "form">
-		<form id="kc-sms-code-login-form" class="${properties.kcFormClass!}" action="${url.loginAction}" method="post">
+		<form onsubmit="login.disabled = true; return true;" id="kc-sms-code-login-form" class="${properties.kcFormClass!}" action="${url.loginAction}" method="post">
 			<div class="${properties.kcFormGroupClass!}">
 				<div class="${properties.kcLabelWrapperClass!}">
 					<label for="code" class="${properties.kcLabelClass!}">${msg("smsAuthLabel")}</label>
@@ -20,7 +20,7 @@
 				</div>
 
 				<div id="kc-form-buttons" class="${properties.kcFormButtonsClass!}">
-					<input class="${properties.kcButtonClass!} ${properties.kcButtonPrimaryClass!} ${properties.kcButtonBlockClass!} ${properties.kcButtonLargeClass!}" type="submit" value="${msg("doSubmit")}"/>
+					<input name="login" class="${properties.kcButtonClass!} ${properties.kcButtonPrimaryClass!} ${properties.kcButtonBlockClass!} ${properties.kcButtonLargeClass!}" type="submit" value="${msg("doSubmit")}"/>
 				</div>
 			</div>
 		</form>
