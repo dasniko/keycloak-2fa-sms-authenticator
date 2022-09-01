@@ -154,7 +154,7 @@ public class ApiSmsService implements SmsService{
 		}
 		// convert +490176 to +49176
 		if (phone_number.startsWith(countrycode+"0")) {
-			phone_number = phone_number.replaceFirst(countrycode+"0", countrycode);
+			phone_number = phone_number.replaceFirst("\\+"+country_number+"0", countrycode);
 			logger.infof("Clean phone number: convert +490176 to +49176, set phone number to %s", phone_number);
 		}
 		// convert 0 to +49
