@@ -6,7 +6,7 @@
 
 	<groupId>netzbegruenung</groupId>
 	<artifactId>keycloak-2fa-sms-authenticator</artifactId>
-	<version>0.2.7</version>
+	<version>0.3.0</version>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

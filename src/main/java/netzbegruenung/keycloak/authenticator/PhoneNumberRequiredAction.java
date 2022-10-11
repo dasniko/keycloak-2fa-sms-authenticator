@@ -28,6 +28,7 @@ import org.keycloak.authentication.RequiredActionProvider;
 import org.keycloak.authentication.requiredactions.WebAuthnRegisterFactory;
 import org.keycloak.credential.CredentialModel;
 import org.keycloak.models.AuthenticatorConfigModel;
+import org.keycloak.models.RoleModel;
 import org.keycloak.models.UserModel;
 import org.keycloak.models.credential.OTPCredentialModel;
 import org.keycloak.models.credential.WebAuthnCredentialModel;
@@ -55,12 +56,26 @@ public class PhoneNumberRequiredAction implements RequiredActionProvider, Creden
 	public void evaluateTriggers(RequiredActionContext context) {
 		// TODO: get the alias from somewhere else or move config into realm or application scope
 		AuthenticatorConfigModel config = context.getRealm().getAuthenticatorConfigByAlias("sms-2fa");
-		Boolean forceSecondFactorEnabled = Boolean.parseBoolean(config.getConfig().get("forceSecondFactor"));
+		boolean forceSecondFactorEnabled = Boolean.parseBoolean(config.getConfig().get("forceSecondFactor"));
 		if (forceSecondFactorEnabled) {
+			if (config.getConfig().get("whitelist") != null) {
+				RoleModel whitelistRole = context.getRealm().getRole(config.getConfig().get("whitelist"));
+				if (whitelistRole == null) {
+					logger.errorf(
+						"Failed configured whitelist role check [%s], make sure that the role exists",
+						config.getConfig().get("whitelist")
+					);
+				} else if (context.getUser().hasRole(whitelistRole)) {
+					// skip enforcement if user is whitelisted
+					return;
+				}
+			}
+
 			Stream<CredentialModel> credentials = context
 				.getSession()
 				.userCredentialManager()
 				.getStoredCredentialsStream(context.getRealm(), context.getUser());
+			// list of accepted 2FA alternatives
 			List<String> secondFactors = Arrays.asList(
 				SmsAuthenticatorModel.TYPE,
 				WebAuthnCredentialModel.TYPE_TWOFACTOR,
