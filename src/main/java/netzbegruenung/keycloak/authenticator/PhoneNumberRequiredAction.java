@@ -56,6 +56,10 @@ public class PhoneNumberRequiredAction implements RequiredActionProvider, Creden
 	public void evaluateTriggers(RequiredActionContext context) {
 		// TODO: get the alias from somewhere else or move config into realm or application scope
 		AuthenticatorConfigModel config = context.getRealm().getAuthenticatorConfigByAlias("sms-2fa");
+		if (config == null) {
+			logger.error("Failed to check 2FA enforcement, no config alias sms-2fa found");
+			return;
+		}
 		boolean forceSecondFactorEnabled = Boolean.parseBoolean(config.getConfig().get("forceSecondFactor"));
 		if (forceSecondFactorEnabled) {
 			if (config.getConfig().get("whitelist") != null) {
