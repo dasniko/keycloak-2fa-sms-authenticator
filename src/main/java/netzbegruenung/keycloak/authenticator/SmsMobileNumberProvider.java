@@ -34,6 +34,7 @@ import org.keycloak.models.RealmModel;
 import org.keycloak.models.UserCredentialModel;
 import org.keycloak.models.UserModel;
 import java.util.*;
+import java.util.stream.Stream;
 
 public class SmsMobileNumberProvider implements CredentialProvider<SmsAuthenticatorModel>, CredentialInputValidator, CredentialInputUpdater {
 
@@ -119,8 +120,8 @@ public class SmsMobileNumberProvider implements CredentialProvider<SmsAuthentica
     }
 
     @Override
-    public Set<String> getDisableableCredentialTypes(RealmModel realm, UserModel user) {
-        return Collections.EMPTY_SET;
+    public Stream<String> getDisableableCredentialTypesStream(RealmModel realm, UserModel user) {
+        return Stream.empty();
     }
 
     @Override
