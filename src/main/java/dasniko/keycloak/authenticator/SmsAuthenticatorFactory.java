@@ -1,5 +1,6 @@
 package dasniko.keycloak.authenticator;
 
+import com.google.auto.service.AutoService;
 import org.keycloak.Config;
 import org.keycloak.authentication.Authenticator;
 import org.keycloak.authentication.AuthenticatorFactory;
@@ -13,9 +14,12 @@ import java.util.List;
 /**
  * @author Niko Köbler, https://www.n-k.de, @dasniko
  */
+@AutoService(AuthenticatorFactory.class)
 public class SmsAuthenticatorFactory implements AuthenticatorFactory {
 
 	public static final String PROVIDER_ID = "sms-authenticator";
+
+	private static final SmsAuthenticator SINGLETON = new SmsAuthenticator();
 
 	@Override
 	public String getId() {
@@ -64,7 +68,7 @@ public class SmsAuthenticatorFactory implements AuthenticatorFactory {
 
 	@Override
 	public Authenticator create(KeycloakSession session) {
-		return new SmsAuthenticator();
+		return SINGLETON;
 	}
 
 	@Override

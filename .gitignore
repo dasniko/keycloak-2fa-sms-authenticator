@@ -2,5 +2,5 @@
 *.iml
 config
 target
-copy.sh
+deploy.sh
 dependency-reduced-pom.xml

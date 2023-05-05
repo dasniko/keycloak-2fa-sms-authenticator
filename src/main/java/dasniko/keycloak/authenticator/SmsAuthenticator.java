@@ -21,6 +21,7 @@ import java.util.Locale;
  */
 public class SmsAuthenticator implements Authenticator {
 
+	private static final String MOBILE_NUMBER_FIELD = "mobile_number";
 	private static final String TPL_CODE = "login-sms.ftl";
 
 	@Override
@@ -29,7 +30,7 @@ public class SmsAuthenticator implements Authenticator {
 		KeycloakSession session = context.getSession();
 		UserModel user = context.getUser();
 
-		String mobileNumber = user.getFirstAttribute("mobile_number");
+		String mobileNumber = user.getFirstAttribute(MOBILE_NUMBER_FIELD);
 		// mobileNumber of course has to be further validated on proper format, country code, ...
 
 		int length = Integer.parseInt(config.getConfig().get("length"));
@@ -100,7 +101,7 @@ public class SmsAuthenticator implements Authenticator {
 
 	@Override
 	public boolean configuredFor(KeycloakSession session, RealmModel realm, UserModel user) {
-		return user.getFirstAttribute("mobile_number") != null;
+		return user.getFirstAttribute(MOBILE_NUMBER_FIELD) != null;
 	}
 
 	@Override
