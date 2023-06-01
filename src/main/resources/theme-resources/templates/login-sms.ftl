@@ -2,6 +2,8 @@
 <@layout.registrationLayout displayInfo=true; section>
 	<#if section = "header">
 		${msg("smsAuthTitle",realm.displayName)}
+	<#elseif section = "show-username">
+		<h1>${msg("smsAuthCodeTitle", realm.displayName)}</h1>
 	<#elseif section = "form">
 		<form id="kc-sms-code-login-form" class="${properties.kcFormClass!}" action="${url.loginAction}" method="post">
 			<div class="${properties.kcFormGroupClass!}">
@@ -13,12 +15,6 @@
 				</div>
 			</div>
 			<div class="${properties.kcFormGroupClass!} ${properties.kcFormSettingClass!}">
-				<div id="kc-form-options" class="${properties.kcFormOptionsClass!}">
-					<div class="${properties.kcFormOptionsWrapperClass!}">
-						<span><a href="${url.loginUrl}">${kcSanitize(msg("backToLogin"))?no_esc}</a></span>
-					</div>
-				</div>
-
 				<div id="kc-form-buttons" class="${properties.kcFormButtonsClass!}">
 					<input class="${properties.kcButtonClass!} ${properties.kcButtonPrimaryClass!} ${properties.kcButtonBlockClass!} ${properties.kcButtonLargeClass!}" type="submit" value="${msg("doSubmit")}"/>
 				</div>
