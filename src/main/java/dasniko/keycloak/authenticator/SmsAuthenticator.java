@@ -33,13 +33,13 @@ public class SmsAuthenticator implements Authenticator {
 		String mobileNumber = user.getFirstAttribute(MOBILE_NUMBER_FIELD);
 		// mobileNumber of course has to be further validated on proper format, country code, ...
 
-		int length = Integer.parseInt(config.getConfig().get("length"));
-		int ttl = Integer.parseInt(config.getConfig().get("ttl"));
+		int length = Integer.parseInt(config.getConfig().get(SmsConstants.CODE_LENGTH));
+		int ttl = Integer.parseInt(config.getConfig().get(SmsConstants.CODE_TTL));
 
 		String code = SecretGenerator.getInstance().randomString(length, SecretGenerator.DIGITS);
 		AuthenticationSessionModel authSession = context.getAuthenticationSession();
-		authSession.setAuthNote("code", code);
-		authSession.setAuthNote("ttl", Long.toString(System.currentTimeMillis() + (ttl * 1000L)));
+		authSession.setAuthNote(SmsConstants.CODE, code);
+		authSession.setAuthNote(SmsConstants.CODE_TTL, Long.toString(System.currentTimeMillis() + (ttl * 1000L)));
 
 		try {
 			Theme theme = session.theme().getTheme(Theme.Type.LOGIN);
@@ -59,11 +59,11 @@ public class SmsAuthenticator implements Authenticator {
 
 	@Override
 	public void action(AuthenticationFlowContext context) {
-		String enteredCode = context.getHttpRequest().getDecodedFormParameters().getFirst("code");
+		String enteredCode = context.getHttpRequest().getDecodedFormParameters().getFirst(SmsConstants.CODE);
 
 		AuthenticationSessionModel authSession = context.getAuthenticationSession();
-		String code = authSession.getAuthNote("code");
-		String ttl = authSession.getAuthNote("ttl");
+		String code = authSession.getAuthNote(SmsConstants.CODE);
+		String ttl = authSession.getAuthNote(SmsConstants.CODE_TTL);
 
 		if (code == null || ttl == null) {
 			context.failureChallenge(AuthenticationFlowError.INTERNAL_ERROR,
