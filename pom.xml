@@ -43,17 +43,6 @@
 			<artifactId>keycloak-services</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>software.amazon.awssdk</groupId>
-			<artifactId>sns</artifactId>
-			<version>${aws.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>software.amazon.awssdk</groupId>
-					<artifactId>netty-nio-client</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 		</dependency>
@@ -84,7 +73,6 @@
 						<configuration>
 							<artifactSet>
 								<includes>
-									<include>software.amazon.awssdk:*</include>
 									<include>org.reactivestreams:reactive-streams</include>
 								</includes>
 							</artifactSet>
