@@ -1,5 +1,8 @@
 # Keycloak 2FA SMS Authenticator
 
+> This repository is no more actively maintained. As mentioned below, it's demo purposes only, not meant for direct production usage.
+> Additionally, using SMS text messages is only convenience, no security. Simply don't use it!
+
 Keycloak Authentication Provider implementation to get a 2nd-factor authentication with a OTP/code/token send via SMS (through AWS SNS).
 
 _Demo purposes only!_
